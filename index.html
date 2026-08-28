@@ -1,0 +1,918 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campo Antonio Martín · Reserva de campo de rugby y fútbol en Torrelodones</title>
+<meta name="description" content="Reserva online el Campo Antonio Martín de Torrelodones: rugby, fútbol 11 y fútbol 7 en hierba artificial, de 9:00 a 23:00 todos los días. Pago con tarjeta o Bizum.">
+<link rel="icon" href="img/logo.png">
+<meta property="og:title" content="Campo Antonio Martín · Torrelodones">
+<meta property="og:description" content="Reserva online el campo de rugby y fútbol de Torrelodones.">
+<meta property="og:image" content="https://campoantoniomartin.com/img/hero.jpg">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --tinta:#3A3A3C;
+  --tinta-2:#6C6C6E;
+  --tinta-3:#9B9B9C;
+  --ambar:#DFA83C;
+  --ambar-osc:#B8862A;
+  --ambar-suave:#FAF1DE;
+  --cesped:#45803A;
+  --cesped-osc:#2F5E28;
+  --cesped-suave:#EDF3E9;
+  --azul:#4A6E8F;
+  --azul-suave:#EDF1F5;
+  --linea:#E6E6E1;
+  --hueso:#FAFAF8;
+  --lamas:repeating-linear-gradient(90deg,var(--ambar) 0 3px,transparent 3px 8px);
+  --p:"Poppins",system-ui,sans-serif;
+  --r:"Roboto",system-ui,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--tinta);font-family:var(--r);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--p);margin:0;line-height:1.08;font-weight:600;letter-spacing:-.02em}
+h2{font-size:clamp(1.9rem,4vw,2.9rem)}
+h3{font-size:1.2rem;font-weight:600;letter-spacing:-.01em}
+p{margin:0 0 1rem}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{width:min(1200px,92vw);margin:0 auto}
+.eyebrow{font-family:var(--r);font-weight:500;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--tinta-3);display:block;margin-bottom:.9rem}
+.lamas{height:6px;background:var(--lamas)}
+
+/* wordmark, calcado del logotipo */
+.wordmark{font-family:var(--p);line-height:.95}
+.wordmark .l1{display:block;font-weight:300;letter-spacing:.42em;text-transform:lowercase}
+.wordmark .l2{display:block;font-weight:700;letter-spacing:-.015em;text-transform:lowercase}
+.wordmark .l2 i{font-style:normal;color:var(--ambar)}
+
+/* ---------- cabecera ---------- */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--linea)}
+.topbar .wrap{display:flex;align-items:center;gap:1.5rem;height:72px}
+.marca{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+.marca img{width:46px;height:auto}
+.marca .wordmark .l1{font-size:.6rem;letter-spacing:.34em;color:var(--tinta-2)}
+.marca .wordmark .l2{font-size:1.05rem}
+nav{margin-left:auto;display:flex;gap:.4rem}
+nav a{font-family:var(--r);font-weight:500;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-2);
+  text-decoration:none;padding:.55rem .8rem;border-bottom:2px solid transparent}
+nav a:hover,nav a:focus-visible{color:var(--tinta);border-bottom-color:var(--ambar)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;background:#fff}
+.hero-grid{display:grid;grid-template-columns:1fr .92fr;gap:3.5rem;align-items:center;padding:4rem 0 4.5rem}
+.hero-card{border-top:6px solid var(--cesped);padding-top:1.8rem}
+.hero-card .wordmark .l1{font-size:clamp(1rem,1.8vw,1.25rem);color:var(--tinta-2)}
+.hero-card .wordmark .l2{font-size:clamp(2rem,4.4vw,3.1rem);margin-top:.15rem}
+.hero-card p{margin:1.3rem 0 0;color:var(--tinta-2);max-width:44ch}
+.hero-foto{margin:0;overflow:hidden;align-self:stretch;min-height:400px}
+.hero-foto img{width:100%;height:100%;object-fit:cover;object-position:center 55%}
+.acciones{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.8rem}
+.btn{display:inline-block;font-family:var(--r);font-weight:500;font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;
+  background:var(--cesped);color:#fff;border:0;padding:.95rem 1.7rem;cursor:pointer;text-decoration:none;border-radius:2px;
+  transition:background .15s ease}
+.btn:hover{background:var(--cesped-osc)}
+.btn.secundario{background:#fff;color:var(--tinta);border:1px solid var(--tinta)}
+.btn.secundario:hover{background:var(--tinta);color:#fff}
+.btn.peligro{background:#fff;color:#A33;border:1px solid #A33}
+.btn.peligro:hover{background:#A33;color:#fff}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+
+/* estado en vivo */
+.estado{display:flex;align-items:center;gap:1.4rem;border:1px solid var(--linea);padding:1.2rem 1.4rem;margin-top:2rem;
+  max-width:520px;background:var(--hueso)}
+.punto{width:52px;height:52px;flex:0 0 auto;border-radius:50%;border:1.5px solid var(--cesped);display:grid;place-items:center}
+.punto i{width:14px;height:14px;border-radius:50%;background:var(--cesped);display:block}
+.punto.ocupado{border-color:var(--ambar-osc)} .punto.ocupado i{background:var(--ambar-osc)}
+.estado b{font-family:var(--p);font-weight:600;font-size:1.15rem;display:block;line-height:1.2}
+.estado span{font-size:.9rem;color:var(--tinta-2)}
+.estado small{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta-3);margin-top:.35rem}
+
+/* ---------- datos ---------- */
+.datos{border-top:1px solid var(--linea);border-bottom:1px solid var(--linea)}
+.datos .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+.dato{padding:2rem 1.5rem 2rem 0;border-right:1px solid var(--linea)}
+.dato:last-child{border-right:0}
+.dato b{display:block;font-family:var(--p);font-weight:600;font-size:2.1rem;color:var(--cesped-osc);line-height:1;letter-spacing:-.03em}
+.dato span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-3)}
+
+/* ---------- secciones ---------- */
+section{padding:5.5rem 0}
+.cabecera-sec{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:end;margin-bottom:3rem}
+.cabecera-sec p{margin:0;color:var(--tinta-2)}
+
+/* instalación */
+.galeria{display:grid;grid-template-columns:1.55fr 1fr;gap:1.5rem}
+.galeria figure{margin:0}
+.galeria img{width:100%;height:100%;object-fit:cover}
+.galeria .col{display:grid;gap:1.5rem}
+.pie{font-size:.78rem;color:var(--tinta-3);padding-top:.6rem;letter-spacing:.02em}
+
+/* tarifas */
+.tarifas{width:100%;border-collapse:collapse;font-size:.97rem}
+.tarifas th{text-align:left;font-size:.68rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-3);
+  padding:0 1rem .7rem 0;border-bottom:1px solid var(--tinta)}
+.tarifas td{padding:1rem 1rem 1rem 0;border-bottom:1px solid var(--linea);vertical-align:top}
+.tarifas td:first-child{font-family:var(--p);font-weight:500}
+.tarifas th.num,.tarifas td.num{text-align:right;white-space:nowrap}
+.tarifas td.num{font-family:var(--p);font-weight:600;font-size:1.02rem;color:var(--cesped-osc)}
+.tarifas td.num.sec{font-weight:500;font-size:.95rem;color:var(--tinta-2)}
+.tarifas tbody tr.grupo td{padding-top:1.6rem}
+.tarifas tr:last-child td{border-bottom:0}
+.nota{font-size:.85rem;color:var(--tinta-3);margin-top:1.2rem;max-width:70ch}
+
+/* ---------- reservas ---------- */
+#reservas{background:var(--hueso);border-top:1px solid var(--linea)}
+.espacios{display:flex;gap:.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--linea)}
+.espacios button{background:none;border:0;border-bottom:2px solid transparent;padding:.7rem .2rem;margin-right:1.6rem;
+  font-family:var(--p);font-weight:500;font-size:1rem;color:var(--tinta-3);cursor:pointer;letter-spacing:-.01em}
+.espacios button.on{color:var(--tinta);border-bottom-color:var(--cesped)}
+.espacios button:hover{color:var(--tinta)}
+.fila-doble{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.check{display:flex;align-items:flex-start;gap:.6rem;margin:0 0 1.1rem;font-size:.92rem;cursor:pointer}
+.check input{width:18px;height:18px;margin:.25rem 0 0;flex:0 0 auto}
+.check a{color:var(--cesped-osc)}
+.resumen{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--linea);
+  padding-top:.9rem;margin-bottom:1.1rem;font-family:var(--p)}
+.resumen b{font-weight:600;font-size:1.5rem;color:var(--cesped-osc);letter-spacing:-.02em}
+.resumen span{font-family:var(--r);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-3)}
+.barra-semana{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.4rem}
+.nav-sem{display:flex;gap:.4rem}
+.nav-sem button{width:40px;height:40px;border:1px solid var(--linea);background:#fff;cursor:pointer;font-size:1rem;color:var(--tinta)}
+.nav-sem button:hover:not(:disabled){border-color:var(--tinta);background:var(--tinta);color:#fff}
+.nav-sem button:disabled{opacity:.3;cursor:not-allowed}
+.rango{font-family:var(--p);font-weight:600;font-size:1.35rem;letter-spacing:-.02em}
+.aviso{display:flex;gap:1rem;align-items:flex-start;background:var(--ambar-suave);border-left:4px solid var(--ambar);
+  padding:1.1rem 1.3rem;margin-bottom:1.6rem;font-size:.92rem;max-width:820px}
+.aviso b{font-weight:700}
+.leyenda{display:flex;gap:1.4rem;flex-wrap:wrap;margin-bottom:1rem;font-size:.78rem;color:var(--tinta-2)}
+.leyenda i{display:inline-block;width:12px;height:12px;margin-right:.5rem;vertical-align:-1px;border-radius:2px}
+
+.tabla-scroll{overflow-x:auto;background:#fff;border:1px solid var(--linea)}
+.grid{display:grid;grid-template-columns:76px repeat(7,minmax(132px,1fr));min-width:960px}
+.gc{border-right:1px solid var(--linea);border-bottom:1px solid var(--linea);min-height:58px;padding:3px}
+.gc.hora{position:sticky;left:0;z-index:2;background:#fff;font-family:var(--r);font-size:.78rem;color:var(--tinta-3);
+  display:flex;align-items:center;justify-content:center;border-right:1px solid var(--linea);padding:0}
+.gh{background:#fff;position:sticky;top:0;z-index:3;padding:.9rem .6rem;border-bottom:2px solid var(--tinta)}
+.gh.hora{z-index:4}
+.gh b{display:block;font-family:var(--p);font-weight:600;font-size:.98rem;letter-spacing:-.01em}
+.gh span{font-size:.72rem;color:var(--tinta-3)}
+.gh.hoy b{color:var(--cesped-osc)}
+.gh.hoy{box-shadow:inset 0 -4px 0 var(--cesped)}
+.par{background:var(--hueso)}
+.par.hora{background:var(--hueso)}
+
+.slot{width:100%;height:100%;min-height:52px;border:0;background:transparent;cursor:pointer;text-align:left;
+  font-family:var(--r);font-size:.8rem;line-height:1.25;padding:.45rem .6rem;display:flex;flex-direction:column;
+  justify-content:center;gap:.1rem;color:var(--tinta)}
+.slot small{font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-3)}
+.slot.libre{border:1px dashed #B9D2B4;color:var(--cesped-osc);background:#fff}
+.slot.libre small{color:var(--cesped)}
+.slot.libre:hover{background:var(--cesped);border-style:solid;border-color:var(--cesped);color:#fff}
+.slot.libre:hover small{color:rgba(255,255,255,.8)}
+.slot.fijo{cursor:default;border-left:3px solid var(--tinta);background:#F3F3F1;font-family:var(--p);font-weight:500;font-size:.78rem}
+.slot.fijo.mini{border-left-color:var(--azul);background:var(--azul-suave)}
+.slot.fijo.totalsport{border-left-color:var(--ambar);background:var(--ambar-suave)}
+.slot.fijo.comp{border-left-color:var(--cesped);background:var(--cesped-suave)}
+.slot.reservado{background:var(--ambar);color:#3A2E10;font-family:var(--p);font-weight:500;font-size:.78rem}
+.slot.reservado small{color:rgba(58,46,16,.7)}
+.slot.reservado:hover{background:var(--ambar-osc);color:#fff}
+.slot.reservado:hover small{color:rgba(255,255,255,.75)}
+.slot.retenida{background:#FDF6E7;border:1px dashed var(--ambar-osc);color:#7A5A14;cursor:not-allowed}
+.slot.retenida small{color:#A2803A}
+.slot.bloqueado{cursor:not-allowed;font-size:.68rem;color:var(--tinta-3);
+  background:repeating-linear-gradient(-45deg,#fff 0 6px,#F4F4F1 6px 12px)}
+.slot.pasado{cursor:not-allowed;font-size:.7rem;color:#C6C6C4}
+.slot:focus-visible{outline:2px solid var(--tinta);outline-offset:-2px}
+
+/* ---------- modal ---------- */
+.velo{position:fixed;inset:0;background:rgba(58,58,60,.55);display:none;place-items:center;z-index:100;padding:1rem}
+.velo.abierto{display:grid}
+.modal{background:#fff;width:min(470px,100%);max-height:92vh;overflow-y:auto;border-top:5px solid var(--cesped)}
+.modal-cab{padding:1.5rem 1.7rem 1.2rem;border-bottom:1px solid var(--linea);position:relative}
+.modal-cab .eyebrow{margin-bottom:.5rem}
+.modal-cuerpo{padding:1.6rem 1.7rem 1.8rem}
+.cerrar{position:absolute;top:1rem;right:1.1rem;background:none;border:0;color:var(--tinta-3);font-size:1.6rem;cursor:pointer;line-height:1;padding:0}
+.cerrar:hover{color:var(--tinta)}
+label{display:block;font-size:.68rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-3);margin:0 0 .4rem}
+input,select{width:100%;padding:.75rem .85rem;border:1px solid var(--linea);background:#fff;font-family:var(--r);
+  font-size:.97rem;border-radius:2px;margin-bottom:1.1rem;color:var(--tinta)}
+input:focus,select:focus{outline:none;border-color:var(--cesped);box-shadow:0 0 0 3px rgba(69,128,58,.15)}
+.modal .btn{width:100%;padding:1rem}
+.error{color:#A33;font-size:.85rem;margin:-.6rem 0 1rem;font-weight:500;display:none}
+.error.visible{display:block}
+.ficha{font-size:.92rem;background:var(--hueso);border-left:3px solid var(--cesped);padding:.9rem 1rem;margin-bottom:1.4rem}
+.ficha b{font-family:var(--p);font-weight:600}
+.codigo{font-family:var(--p);font-weight:600;font-size:1.9rem;letter-spacing:.28em;text-align:center;color:var(--cesped-osc);
+  background:var(--cesped-suave);padding:.9rem;margin:.6rem 0 1.3rem}
+
+/* ---------- faq ---------- */
+.faq details{border-bottom:1px solid var(--linea)}
+.faq summary{list-style:none;cursor:pointer;padding:1.3rem 3rem 1.3rem 0;position:relative;
+  font-family:var(--p);font-weight:500;font-size:1.12rem;letter-spacing:-.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";position:absolute;right:.5rem;top:1.45rem;width:22px;height:22px;border:1px solid var(--linea);
+  border-radius:50%;background:
+    linear-gradient(var(--ambar),var(--ambar)) center/9px 1.5px no-repeat,
+    linear-gradient(var(--ambar),var(--ambar)) center/1.5px 9px no-repeat}
+.faq details[open] summary::after{background:linear-gradient(var(--ambar),var(--ambar)) center/9px 1.5px no-repeat}
+.faq summary:hover{color:var(--cesped-osc)}
+.faq .resp{padding:0 0 1.6rem;max-width:74ch;color:var(--tinta-2)}
+.faq .resp p:last-child{margin-bottom:0}
+
+/* ---------- pie ---------- */
+footer{background:var(--hueso);border-top:1px solid var(--linea);padding:3.5rem 0 3rem;font-size:.9rem;color:var(--tinta-2)}
+footer .wrap{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2.5rem}
+footer img{width:96px;margin-bottom:1rem}
+footer b{color:var(--tinta);font-family:var(--p);font-weight:600;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:.7rem}
+footer a{color:var(--cesped-osc)}
+.copy{border-top:1px solid var(--linea);margin-top:2.5rem;padding-top:1.5rem;font-size:.78rem;color:var(--tinta-3)}
+
+@media (max-width:900px){
+  body{font-size:16px}
+  .hero-grid{grid-template-columns:1fr;gap:2rem;padding:2.5rem 0 3rem}
+  .hero-foto{min-height:240px;max-height:300px}
+  .datos .wrap{grid-template-columns:1fr 1fr}
+  .dato{padding:1.4rem 1rem 1.4rem 0}
+  .dato:nth-child(2){border-right:0}
+  .cabecera-sec{grid-template-columns:1fr;gap:1.2rem}
+  .galeria{grid-template-columns:1fr}
+  footer .wrap{grid-template-columns:1fr}
+  section{padding:3.5rem 0}
+  nav a{padding:.5rem .45rem;font-size:.65rem;letter-spacing:.08em}
+  .marca .wordmark .l1{display:none}
+  .estado{flex-wrap:wrap}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="marca" href="#inicio">
+      <img src="img/logo.png" alt="Campo Antonio Martín">
+      <span class="wordmark"><span class="l1">campo</span><span class="l2">antoniomart<i>í</i>n</span></span>
+    </a>
+    <nav>
+      <a href="#instalacion">El campo</a>
+      <a href="#reservas">Reservas</a>
+      <a href="#faq">Preguntas</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero" id="inicio">
+  <div class="wrap hero-grid">
+    <div class="hero-card">
+      <span class="eyebrow">Torrelodones · gestión Torrelodones Rugby Club</span>
+      <span class="wordmark"><span class="l1">campo</span><span class="l2">antoniomart<i>í</i>n</span></span>
+      <p>Hierba artificial homologada para rugby, fútbol 11 y fútbol 7, con iluminación LED, gradas y vestuarios. De 9:00 a 23:00, todos los días.</p>
+      <div class="acciones">
+        <a class="btn" href="#reservas">Reservar</a>
+        <a class="btn secundario" href="#faq">Cómo funciona</a>
+      </div>
+      <div class="estado" id="estado-vivo">
+        <span class="punto" id="estado-punto"><i></i></span>
+        <div>
+          <b id="estado-valor">Consultando</b>
+          <span id="estado-detalle">Cargando el calendario de hoy.</span>
+          <small id="estado-reloj"></small>
+        </div>
+      </div>
+    </div>
+    <figure class="hero-foto"><img src="img/hero.jpg" alt="Campo Antonio Martín, hierba artificial con gradas"></figure>
+  </div>
+  <div class="datos">
+    <div class="wrap">
+      <div class="dato"><b>100×70</b><span>Metros de juego</span></div>
+      <div class="dato"><b>LED</b><span>Luz hasta las 23:00</span></div>
+      <div class="dato"><b>4</b><span>Vestuarios con ducha</span></div>
+      <div class="dato"><b>9–23</b><span>Lunes a domingo</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="instalacion">
+  <div class="wrap">
+    <div class="cabecera-sec">
+      <div>
+        <span class="eyebrow">La instalación</span>
+        <h2>El campo de rugby y fútbol<br>de Torrelodones</h2>
+      </div>
+      <p>Superficie de última generación con marcaje simultáneo de rugby, fútbol 11 y fútbol 7. El edificio de vestuarios, con su celosía de madera, cierra el lado norte y protege del viento. Gradas para 300 personas y aparcamiento gratuito en la entrada.</p>
+    </div>
+    <div class="galeria">
+      <figure>
+        <img src="img/fachada.jpg" alt="Palos de rugby y edificio de vestuarios con celosía de madera">
+        <figcaption class="pie">Postes de rugby y edificio de vestuarios</figcaption>
+      </figure>
+      <div class="col">
+        <figure>
+          <img src="img/postes.jpg" alt="Vista del campo desde la esquina, con la fachada de lamas al fondo">
+        </figure>
+        <div style="background:var(--cesped-suave);padding:1.6rem;border-left:4px solid var(--cesped)">
+          <h3>Reserva en dos minutos</h3>
+          <p style="margin:.6rem 0 0;font-size:.92rem;color:var(--tinta-2)">Elige la hora libre, paga con tarjeta o Bizum y recibes la confirmación por correo. Sin registro, sin llamadas, sin esperar respuesta.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="lamas"></div>
+
+<section>
+  <div class="wrap">
+    <div class="cabecera-sec">
+      <div>
+        <span class="eyebrow">Tarifas 2026</span>
+        <h2>Cuánto cuesta jugar aquí</h2>
+      </div>
+    </div>
+    <table class="tarifas">
+      <thead><tr><th>Modalidad</th><th class="num">1 hora</th><th class="num">2 horas</th></tr></thead>
+      <tbody>
+        <tr><td>Campo longitudinal · sin luz</td><td class="num">68,00 €</td><td class="num sec">125,00 €</td></tr>
+        <tr><td>Campo longitudinal · con luz</td><td class="num">81,00 €</td><td class="num sec">150,00 €</td></tr>
+        <tr class="grupo"><td>Campo transversal · sin luz</td><td class="num">43,00 €</td><td class="num sec">80,00 €</td></tr>
+        <tr><td>Campo transversal · con luz</td><td class="num">52,00 €</td><td class="num sec">96,00 €</td></tr>
+        <tr class="grupo"><td>Sala multiusos · tarifa general</td><td class="num">25,00 €</td><td class="num sec">—</td></tr>
+      </tbody>
+    </table>
+    <p class="nota"><b>Uso de vestuarios: 10 € más por hora.</b> Precios finales, IVA incluido.<br>
+      <b>Tarifas especiales para reservas periódicas:</b> si buscas un alquiler recurrente o de alto volumen, contáctanos y elaboramos una propuesta a tu medida.</p>
+  </div>
+</section>
+
+<section id="reservas">
+  <div class="wrap">
+    <div class="cabecera-sec">
+      <div>
+        <span class="eyebrow">Calendario</span>
+        <h2>Reserva tu hora</h2>
+      </div>
+      <p>Toca cualquier hueco libre para reservarlo. Recibirás un código de cuatro cifras: guárdalo, es lo único que te permite anular la reserva.</p>
+    </div>
+
+    <div class="aviso">
+      <span aria-hidden="true">◷</span>
+      <div><b>Sábados y domingos:</b> las reservas se abren <b>cada martes</b>, una vez confirmados los partidos de TRC, Minifútbol y TotalSport. Hasta entonces aparecen bloqueados.</div>
+    </div>
+
+    <div class="espacios" id="espacios">
+      <button data-espacio="campo" class="on">Campo</button>
+      <button data-espacio="sala">Sala multiusos</button>
+    </div>
+
+    <div class="barra-semana">
+      <div class="nav-sem">
+        <button id="sem-prev" aria-label="Semana anterior">←</button>
+        <button id="sem-next" aria-label="Semana siguiente">→</button>
+      </div>
+      <div class="rango" id="rango-semana">—</div>
+      <button class="btn secundario" id="sem-hoy" style="margin-left:auto">Semana actual</button>
+    </div>
+
+    <div class="leyenda">
+      <span><i style="background:#fff;border:1px dashed #B9D2B4"></i>Libre</span>
+      <span><i style="background:var(--ambar)"></i>Reservado</span>
+      <span><i style="background:#FDF6E7;border:1px dashed var(--ambar-osc)"></i>En proceso de pago</span>
+      <span><i style="background:#F3F3F1;border-left:3px solid var(--tinta)"></i>Entrenamiento TRC</span>
+      <span><i style="background:var(--azul-suave);border-left:3px solid var(--azul)"></i>Entrenamiento Minifútbol</span>
+    </div>
+
+    <div class="aviso" id="error-conexion" style="display:none;background:#FBECEC;border-left-color:#A33"></div>
+
+    <div class="tabla-scroll">
+      <div class="grid" id="grid" role="grid" aria-label="Calendario semanal de reservas"></div>
+    </div>
+    <p class="nota">Los entrenamientos de TRC y Minifútbol están fijados de temporada y no se pueden reservar. Si necesitas una de esas franjas para un amistoso, escríbenos y lo miramos.</p>
+  </div>
+</section>
+
+<section id="faq" class="faq">
+  <div class="wrap">
+    <div class="cabecera-sec">
+      <div>
+        <span class="eyebrow">Preguntas frecuentes</span>
+        <h2>Lo que siempre nos preguntan</h2>
+      </div>
+      <p>Si no encuentras lo que buscas, escribe a <a href="mailto:hola@campoantoniomartin.com" style="color:var(--cesped-osc)">hola@campoantoniomartin.com</a> y te contestamos el mismo día.</p>
+    </div>
+
+    <details open>
+      <summary>¿Por qué no puedo reservar un sábado con dos semanas de antelación?</summary>
+      <div class="resp"><p>Hasta el lunes no se cierran los horarios de la competición del TRC, de Minifútbol y de TotalSport, que tienen prioridad sobre el campo. En cuanto la jornada está confirmada, cada martes se liberan todas las horas que quedan libres ese fin de semana.</p></div>
+    </details>
+    <details>
+      <summary>¿Cómo se paga?</summary>
+      <div class="resp"><p>Online, en el momento de reservar. Tarjeta, Apple Pay, Google Pay o Bizum, a través de una pasarela de pago: tus datos bancarios no pasan por esta web ni los ve el club. La hora no queda confirmada hasta que el pago se completa, y se te guarda 35 minutos mientras terminas.</p></div>
+    </details>
+    <details>
+      <summary>¿Cómo anulo una reserva y cuándo me devuelven el dinero?</summary>
+      <div class="resp"><p>Toca tu reserva en el calendario e introduce el código de cuatro cifras que recibiste por correo. Hasta 48 horas antes se devuelve el importe completo al mismo medio de pago, en unos días hábiles. Con menos de 48 horas escríbenos y lo valoramos: si podemos volver a alquilar la hora, se devuelve igual.</p></div>
+    </details>
+    <details>
+      <summary>¿Se juega si llueve?</summary>
+      <div class="resp"><p>Sí. La hierba artificial drena y el campo aguanta lluvia intensa. Solo se cierra por aviso naranja o rojo de la AEMET, por tormenta eléctrica o por orden del ayuntamiento. En esos casos la hora se recupera otro día sin coste.</p></div>
+    </details>
+    <details>
+      <summary>¿Qué calzado se puede usar?</summary>
+      <div class="resp"><p>Botas de tacos de goma o multitaco. Los tacos de aluminio están prohibidos: rompen la fibra y la reparación nos la repercute el ayuntamiento. Hay control visual en el acceso al campo.</p></div>
+    </details>
+    <details>
+      <summary>¿La luz está incluida?</summary>
+      <div class="resp"><p>No. La luz va aparte y tiene su propia tarifa, porque no siempre hace falta: en junio a las 20:00 se juega de sobra con luz natural y en diciembre a las 18:00 no. Al reservar eliges si la necesitas y el precio se ajusta.</p></div>
+    </details>
+    <details>
+      <summary>¿Qué diferencia hay entre campo longitudinal y transversal?</summary>
+      <div class="resp"><p>El longitudinal es el campo entero en su orientación habitual, para rugby o fútbol 11. El transversal aprovecha el ancho y sale un espacio más corto, pensado para fútbol 7, grupos pequeños o escuelas. Tiene su propia tarifa, bastante más baja.</p></div>
+    </details>
+    <details>
+      <summary>¿Los vestuarios están incluidos?</summary>
+      <div class="resp"><p>No, se añaden 10 € por hora si los vais a usar. Muchos equipos vienen ya cambiados y prefieren no pagarlos, así que lo dejamos como opción al reservar.</p></div>
+    </details>
+    <details>
+      <summary>¿Hay aparcamiento y cantina?</summary>
+      <div class="resp"><p>Aparcamiento gratuito junto al acceso, con unas 60 plazas. La cantina abre los días de partido y los martes y jueves por la tarde.</p></div>
+    </details>
+    <details>
+      <summary>Somos una empresa y queremos organizar un torneo</summary>
+      <div class="resp"><p>Escríbenos con fechas y número de equipos. Para eventos de más de tres horas seguidas preparamos presupuesto cerrado con árbitros, megafonía, cantina y fotógrafo.</p></div>
+    </details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <img src="img/logo.png" alt="Campo Antonio Martín">
+      <p style="margin:0">Instalación deportiva municipal gestionada por el Torrelodones Rugby Club. Abierta de 9:00 a 23:00 de lunes a domingo.</p>
+    </div>
+    <div>
+      <b>Contacto</b>
+      <p>hola@campoantoniomartin.com<br>+34 600 000 000<br>Torrelodones, Madrid</p>
+    </div>
+    <div>
+      <b>Antes de venir</b>
+      <p>Prohibidos los tacos de aluminio.<br>Pago previo a la hora reservada.<br>Anulación gratuita hasta 48 h antes.</p>
+    </div>
+  </div>
+  <div class="wrap copy">campoantoniomartin.com · Torrelodones Rugby Club ·
+    <a href="legal.html#aviso">Aviso legal</a> ·
+    <a href="legal.html#privacidad">Privacidad</a> ·
+    <a href="legal.html#condiciones">Condiciones de reserva</a>
+  </div>
+</footer>
+
+<div class="velo" id="velo" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-cab">
+      <button class="cerrar" id="modal-cerrar" aria-label="Cerrar">×</button>
+      <span class="eyebrow" id="modal-eyebrow">Nueva reserva</span>
+      <h3 id="modal-titulo">—</h3>
+    </div>
+    <div class="modal-cuerpo" id="modal-cuerpo"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURACIÓN
+   ============================================================ */
+
+// Pega aquí la URL /exec de la aplicación web de Apps Script.
+// Vacío = modo demostración: se puede probar todo, pero nada se guarda.
+const API_URL = "";
+
+const HORA_INICIO = 9;
+const HORA_FIN    = 23;
+const SEMANAS_VISTA = 5;
+
+// Entrenamientos fijos de temporada. Solo afectan al campo, no a la sala.
+// Clave = día ISO (1 lunes … 7 domingo) → [inicio, fin, etiqueta, tipo]
+let FIJOS = {
+  1: [[17,22,"Entrenamiento Minifútbol","mini"]],
+  2: [[17,22,"Entrenamiento TRC","trc"]],
+  3: [[17,22,"Entrenamiento Minifútbol","mini"]],
+  4: [[17,22,"Entrenamiento TRC","trc"]],
+  5: [[17,18,"Entrenamiento Minifútbol","mini"],[18,22,"Entrenamiento TRC","trc"]],
+  6: [],
+  7: []
+};
+
+// Céntimos. Solo para mostrar el importe: el precio bueno lo calcula el servidor.
+let PRECIOS = {
+  longitudinal: { 1:{ sin:6800, con:8100 }, 2:{ sin:12500, con:15000 } },
+  transversal:  { 1:{ sin:4300, con:5200 }, 2:{ sin:8000,  con:9600  } },
+  sala:         { 1:{ sin:2500, con:2500 } }
+};
+let VESTUARIOS_HORA = 1000;
+
+const NOMBRES = { longitudinal:"Campo longitudinal", transversal:"Campo transversal", sala:"Sala multiusos" };
+
+/* ============================================================
+   FECHAS Y FORMATO
+   ============================================================ */
+const DIAS = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const lunesDe = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; };
+const sumaDias = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const claveDia = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const diaISO = d => ((d.getDay()+6)%7)+1;
+const fmtCorto = d => `${d.getDate()} ${MESES[d.getMonth()]}`;
+const euros = c => (c/100).toLocaleString("es-ES",{minimumFractionDigits:2, maximumFractionDigits:2}) + " €";
+const esc = t => String(t == null ? "" : t).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+
+function fijoDe(fecha, hora) {
+  if (espacio !== "campo") return null;
+  const lista = FIJOS[diaISO(fecha)] || [];
+  for (const [ini, fin, etiqueta, tipo] of lista) if (hora >= ini && hora < fin) return { etiqueta, tipo, ini, fin };
+  return null;
+}
+// Sábado y domingo abren el martes 00:00 de esa misma semana
+const finDeSemanaAbierto = (fecha, ahora) => ahora >= sumaDias(lunesDe(fecha), 1);
+
+function precio(tipo, horas, luz, vestuarios) {
+  const t = PRECIOS[tipo]; if (!t) return 0;
+  const h = t[horas] || t[1]; if (!h) return 0;
+  return (h[luz] || h.sin) + (vestuarios ? VESTUARIOS_HORA * horas : 0);
+}
+
+/* ============================================================
+   API · única capa que habla con el servidor
+   ============================================================ */
+const API = (() => {
+  const demo = {};
+  const activa = () => API_URL && API_URL.indexOf("http") === 0;
+  return {
+    demo: !activa(),
+    async leer(lunesISO) {
+      if (!activa()) return { ok:true, reservas: demo[lunesISO] || {} };
+      const r = await fetch(`${API_URL}?accion=leer&semana=${lunesISO}`, { redirect:"follow" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return await r.json();
+    },
+    async enviar(payload) {
+      if (!activa()) return demoEnviar(demo, payload);
+      const r = await fetch(API_URL, { method:"POST", body: JSON.stringify(payload), redirect:"follow" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return await r.json();
+    }
+  };
+})();
+
+function demoEnviar(demo, p) {
+  if (p.accion === "confirmar") return { error:"Modo demostración: no hay pasarela de pago." };
+  const partes = String(p.id).split("|");
+  const lunesISO = claveDia(lunesDe(new Date(partes[1] + "T00:00:00")));
+  demo[lunesISO] = demo[lunesISO] || {};
+
+  if (p.accion === "reservar") {
+    const codigo = String(Math.floor(1000 + Math.random()*9000));
+    const etiqueta = p.entidad, modalidad = etiquetaModalidad(p);
+    for (let j = 0; j < p.horas; j++) {
+      const k = `${partes[0]}|${partes[1]}|${Number(partes[2]) + j}`;
+      demo[lunesISO][k] = { etiqueta, modalidad, estado:"pagada", ref:p.id, _codigo:codigo };
+    }
+    return { ok:true, codigo, demo:true };
+  }
+  const claves = Object.keys(demo[lunesISO]).filter(k => demo[lunesISO][k].ref === p.id);
+  if (!claves.length) return { error:"No encuentro esa reserva." };
+  if (demo[lunesISO][claves[0]]._codigo !== String(p.codigo).trim()) return { error:"Código incorrecto." };
+  claves.forEach(k => delete demo[lunesISO][k]);
+  return { ok:true };
+}
+
+function etiquetaModalidad(p) {
+  let t = NOMBRES[p.tipo] || p.tipo;
+  if (p.tipo !== "sala") t += p.luz === "con" ? " · con luz" : " · sin luz";
+  if (p.horas > 1) t += ` · ${p.horas} h`;
+  if (p.vestuarios) t += " · vestuarios";
+  return t;
+}
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+let lunesActual = lunesDe(new Date());
+let espacio = "campo";
+let reservas = {};
+let cargando = true;
+const $ = s => document.querySelector(s);
+const grid = $("#grid");
+const cajaError = $("#error-conexion");
+const clave = (fecha, hora) => `${espacio}|${claveDia(fecha)}|${hora}`;
+
+function mostrarError(txt) {
+  if (!txt) { cajaError.style.display = "none"; return; }
+  cajaError.innerHTML = `<span aria-hidden="true">!</span><div>${txt}</div>`;
+  cajaError.style.display = "flex";
+}
+
+async function cargarSemana() {
+  cargando = true; pintar();
+  try {
+    const r = await API.leer(claveDia(lunesActual));
+    if (r.error) throw new Error(r.error);
+    if (r.fijos) FIJOS = r.fijos;
+    if (r.precios) PRECIOS = r.precios;
+    if (r.vestuarios) VESTUARIOS_HORA = r.vestuarios;
+    reservas = r.reservas || {};
+    mostrarError(API.demo
+      ? "<b>Modo demostración:</b> las reservas no se guardan y no hay pasarela de pago. Pega la URL de Apps Script en <code>API_URL</code> para activarlo."
+      : "");
+  } catch (e) {
+    reservas = {};
+    mostrarError("<b>No he podido cargar el calendario.</b> Comprueba tu conexión y recarga la página. Si sigue igual, escribe a hola@campoantoniomartin.com.");
+  }
+  cargando = false; pintar(); pintarEstado();
+}
+
+/* ============================================================
+   REJILLA
+   ============================================================ */
+function pintar() {
+  const ahora = new Date();
+  const hoyKey = claveDia(ahora);
+  const dias = Array.from({length:7}, (_,i) => sumaDias(lunesActual,i));
+
+  $("#rango-semana").textContent = `${fmtCorto(dias[0])} — ${fmtCorto(dias[6])}`;
+  $("#sem-prev").disabled = lunesActual <= lunesDe(ahora);
+  $("#sem-next").disabled = lunesActual >= sumaDias(lunesDe(ahora), 7*(SEMANAS_VISTA-1));
+
+  let html = `<div class="gc gh hora"></div>`;
+  dias.forEach(d => {
+    const esHoy = claveDia(d) === hoyKey;
+    html += `<div class="gc gh${esHoy?" hoy":""}"><b>${DIAS[diaISO(d)-1]}</b><span>${fmtCorto(d)}</span></div>`;
+  });
+
+  for (let h = HORA_INICIO; h < HORA_FIN; h++) {
+    const c = (h - HORA_INICIO) % 2 === 1 ? " par" : "";
+    html += `<div class="gc hora${c}">${String(h).padStart(2,"0")}:00</div>`;
+    dias.forEach(d => { html += `<div class="gc${c}">${celda(d,h,ahora)}</div>`; });
+  }
+  grid.innerHTML = html;
+  grid.querySelectorAll("button.slot[data-k]").forEach(b => b.addEventListener("click", () => abrirModal(b.dataset.k)));
+}
+
+function celda(fecha, hora, ahora) {
+  const k = clave(fecha, hora);
+  const inicio = new Date(fecha); inicio.setHours(hora,0,0,0);
+  const fijo = fijoDe(fecha, hora);
+  if (fijo) return `<span class="slot fijo ${fijo.tipo}">${esc(fijo.etiqueta)}<small>${fijo.ini}:00–${fijo.fin}:00</small></span>`;
+  if (inicio < ahora) return `<span class="slot pasado">Pasada</span>`;
+
+  const r = reservas[k];
+  if (r && r.estado === "retenida") return `<span class="slot retenida">En proceso de pago<small>Vuelve en 35 min</small></span>`;
+  if (r) return `<button class="slot reservado" data-k="${k}">${esc(r.etiqueta)}<small>${esc(r.modalidad)}</small></button>`;
+
+  if (diaISO(fecha) >= 6 && !finDeSemanaAbierto(fecha, ahora))
+    return `<span class="slot bloqueado">Se abre el martes ${fmtCorto(sumaDias(lunesDe(fecha),1))}</span>`;
+  if (cargando) return `<span class="slot bloqueado">…</span>`;
+  return `<button class="slot libre" data-k="${k}">Libre<small>Reservar</small></button>`;
+}
+
+// ¿Se puede reservar esta hora concreta?
+function libre(fecha, hora) {
+  if (hora < HORA_INICIO || hora >= HORA_FIN) return false;
+  const inicio = new Date(fecha); inicio.setHours(hora,0,0,0);
+  if (inicio < new Date()) return false;
+  if (fijoDe(fecha, hora)) return false;
+  if (reservas[clave(fecha, hora)]) return false;
+  if (diaISO(fecha) >= 6 && !finDeSemanaAbierto(fecha, new Date())) return false;
+  return true;
+}
+
+/* ============================================================
+   ESTADO EN VIVO DE LA PORTADA
+   ============================================================ */
+function pintarEstado() {
+  const ahora = new Date(), h = ahora.getHours();
+  const valor = $("#estado-valor"), det = $("#estado-detalle"), punto = $("#estado-punto");
+  $("#estado-reloj").textContent = `Actualizado a las ${String(h).padStart(2,"0")}:${String(ahora.getMinutes()).padStart(2,"0")}`;
+
+  if (h < HORA_INICIO || h >= HORA_FIN) {
+    valor.textContent = "Cerrado"; punto.classList.add("ocupado");
+    det.textContent = `El campo abre a las ${HORA_INICIO}:00.`; return;
+  }
+  const guardado = espacio; espacio = "campo";
+  const fijo = fijoDe(ahora, h), res = reservas[`campo|${claveDia(ahora)}|${h}`];
+  if (fijo || res) {
+    valor.textContent = "Ocupado ahora"; punto.classList.add("ocupado");
+    det.textContent = fijo ? `${fijo.etiqueta}, hasta las ${fijo.fin}:00.`
+                           : `Reserva de ${res.etiqueta}, hasta las ${h+1}:00.`;
+  } else {
+    let l = h+1;
+    while (l < HORA_FIN && !fijoDe(ahora,l) && !reservas[`campo|${claveDia(ahora)}|${l}`]) l++;
+    valor.textContent = "Libre ahora"; punto.classList.remove("ocupado");
+    det.textContent = `Nadie en el campo hasta las ${l}:00.`;
+  }
+  espacio = guardado;
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+const velo = $("#velo"), cuerpo = $("#modal-cuerpo");
+let slotActivo = null;
+const cerrarModal = () => { velo.classList.remove("abierto"); slotActivo = null; };
+$("#modal-cerrar").addEventListener("click", cerrarModal);
+velo.addEventListener("click", e => { if (e.target === velo) cerrarModal(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarModal(); });
+
+function fallo(txt) { const e = $("#err"); if (e) { e.textContent = txt; e.classList.add("visible"); } }
+
+function mensaje(eyebrow, titulo, html) {
+  $("#modal-eyebrow").textContent = eyebrow;
+  $("#modal-titulo").textContent = titulo;
+  cuerpo.innerHTML = html;
+  velo.classList.add("abierto");
+}
+
+function abrirModal(k) {
+  slotActivo = k;
+  const [esp, fechaISO, horaTxt] = k.split("|");
+  const hora = Number(horaTxt);
+  const d = new Date(fechaISO + "T00:00:00");
+  $("#modal-titulo").textContent = `${DIAS[diaISO(d)-1]} ${fmtCorto(d)} · ${hora}:00`;
+  const r = reservas[k];
+
+  if (r) {
+    $("#modal-eyebrow").textContent = "Reserva confirmada";
+    cuerpo.innerHTML = `
+      <div class="ficha"><b>${esc(r.etiqueta)}</b><br>${esc(r.modalidad)}</div>
+      <label for="cod">Código para anular</label>
+      <input id="cod" inputmode="numeric" maxlength="8" placeholder="4 cifras">
+      <p class="error" id="err"></p>
+      <button class="btn peligro" id="anular">Anular esta reserva</button>`;
+    $("#anular").addEventListener("click", () => anular(r.ref || k));
+    velo.classList.add("abierto");
+    return;
+  }
+
+  const esSala = esp === "sala";
+  const cabenDos = !esSala && libre(d, hora + 1);
+  const luzPorDefecto = hora >= 19 ? "con" : "sin";
+
+  $("#modal-eyebrow").textContent = "Nueva reserva";
+  cuerpo.innerHTML = `
+    ${esSala ? `<input type="hidden" id="tipo" value="sala">` : `
+    <label for="tipo">Espacio</label>
+    <select id="tipo">
+      <option value="longitudinal">Campo longitudinal · rugby o fútbol 11</option>
+      <option value="transversal">Campo transversal · fútbol 7 o grupos</option>
+    </select>`}
+
+    ${esSala ? `<input type="hidden" id="horas" value="1"><input type="hidden" id="luz" value="sin">` : `
+    <div class="fila-doble">
+      <div>
+        <label for="horas">Duración</label>
+        <select id="horas">
+          <option value="1">1 hora</option>
+          <option value="2"${cabenDos ? "" : " disabled"}>2 horas${cabenDos ? "" : " · no disponible"}</option>
+        </select>
+      </div>
+      <div>
+        <label for="luz">Iluminación</label>
+        <select id="luz">
+          <option value="sin"${luzPorDefecto === "sin" ? " selected" : ""}>Sin luz</option>
+          <option value="con"${luzPorDefecto === "con" ? " selected" : ""}>Con luz</option>
+        </select>
+      </div>
+    </div>
+    <label class="check"><input type="checkbox" id="vest"><span>Uso de vestuarios · 10 € más por hora</span></label>`}
+
+    <label for="entidad">Equipo, empresa o grupo</label>
+    <input id="entidad" placeholder="Ej. Veteranos TRC" maxlength="28">
+    <label for="nombre">Persona de contacto</label>
+    <input id="nombre" placeholder="Nombre y apellido" maxlength="40">
+    <div class="fila-doble">
+      <div><label for="tel">Teléfono</label><input id="tel" inputmode="tel" placeholder="600 000 000" maxlength="20"></div>
+      <div><label for="mail">Correo</label><input id="mail" inputmode="email" placeholder="tu@correo.com" maxlength="80"></div>
+    </div>
+
+    <label class="check"><input type="checkbox" id="consiente"><span>He leído y acepto las
+      <a href="legal.html#condiciones" target="_blank" rel="noopener">condiciones de reserva</a> y la
+      <a href="legal.html#privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
+
+    <div class="resumen"><span id="detalle-precio">Total</span><b id="precio">—</b></div>
+    <p class="error" id="err"></p>
+    <button class="btn" id="confirmar">Pagar y reservar</button>
+    <p class="nota" style="margin:.9rem 0 0;text-align:center">Tarjeta, Apple Pay, Google Pay o Bizum</p>`;
+
+  const recalcular = () => {
+    const p = datosForm();
+    $("#precio").textContent = euros(precio(p.tipo, p.horas, p.luz, p.vestuarios));
+    $("#detalle-precio").textContent = p.horas > 1 ? `Total · ${p.horas} horas` : "Total · 1 hora";
+  };
+  ["tipo","horas","luz","vest"].forEach(id => { const el = $("#"+id); if (el) el.addEventListener("change", recalcular); });
+  recalcular();
+  $("#confirmar").addEventListener("click", confirmar);
+  velo.classList.add("abierto");
+}
+
+function datosForm() {
+  return {
+    tipo: $("#tipo").value,
+    horas: Number($("#horas") ? $("#horas").value : 1),
+    luz: $("#luz") ? $("#luz").value : "sin",
+    vestuarios: $("#vest") ? $("#vest").checked : false
+  };
+}
+
+async function confirmar() {
+  const p = datosForm();
+  const entidad = $("#entidad").value.trim(), contacto = $("#nombre").value.trim(),
+        telefono = $("#tel").value.trim(), email = $("#mail").value.trim();
+  if (!entidad || !contacto || !telefono) { fallo("Completa el equipo, el contacto y el teléfono."); return; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { fallo("Necesitamos un correo válido para enviarte la confirmación."); return; }
+  if (!$("#consiente").checked) { fallo("Tienes que aceptar las condiciones de reserva y la política de privacidad."); return; }
+
+  const btn = $("#confirmar"); btn.disabled = true; btn.textContent = "Abriendo el pago…";
+  const carga = Object.assign({ accion:"reservar", id:slotActivo, entidad, contacto, telefono, email, consiente:true }, p);
+  let r;
+  try { r = await API.enviar(carga); }
+  catch (e) { r = { error:"No he podido contactar con el servidor. Vuelve a intentarlo en un minuto." }; }
+
+  if (r.error) {
+    fallo(r.error);
+    btn.disabled = false; btn.textContent = "Pagar y reservar";
+    if (/hora|franja|reservando|libre/i.test(r.error)) cargarSemana();
+    return;
+  }
+  if (r.url) { window.location.href = r.url; return; }
+
+  await cargarSemana();
+  exito(r.codigo, `${esc(entidad)}<br>${esc(etiquetaModalidad(carga))}<br>${$("#modal-titulo").textContent}`);
+}
+
+function exito(codigo, ficha) {
+  mensaje("Reserva confirmada", "Todo listo", `
+    <p>Guarda este código, es lo único que te permite anular la reserva:</p>
+    <div class="codigo">${codigo}</div>
+    <div class="ficha">${ficha}</div>
+    <p class="nota" style="margin-top:0">Te lo hemos enviado también por correo, junto con el justificante del pago.</p>
+    <button class="btn secundario" id="listo">Volver al calendario</button>`);
+  $("#listo").addEventListener("click", cerrarModal);
+}
+
+async function anular(ref) {
+  const codigo = $("#cod").value.trim();
+  if (!codigo) { fallo("Escribe el código de cuatro cifras."); return; }
+  const btn = $("#anular"); btn.disabled = true; btn.textContent = "Anulando…";
+  let r;
+  try { r = await API.enviar({ accion:"anular", id:ref, codigo }); }
+  catch (e) { r = { error:"No he podido contactar con el servidor. Vuelve a intentarlo." }; }
+  if (r.error) { fallo(r.error); btn.disabled = false; btn.textContent = "Anular esta reserva"; return; }
+  await cargarSemana();
+  cerrarModal();
+}
+
+/* Vuelta desde la pasarela de pago */
+(async function vueltaDelPago() {
+  const q = new URLSearchParams(location.search);
+  const pago = q.get("pago");
+  if (!pago) return;
+  history.replaceState(null, "", location.pathname + location.hash);
+
+  if (pago === "cancelado") {
+    mensaje("Pago no completado", "La hora sigue libre",
+      `<p>No se ha cobrado nada. La franja vuelve al calendario en unos minutos, así que puedes intentarlo otra vez.</p>
+       <button class="btn secundario" id="listo">Volver al calendario</button>`);
+    $("#listo").addEventListener("click", cerrarModal);
+    return;
+  }
+
+  mensaje("Un segundo", "Comprobando el pago", `<p>Estamos verificándolo con la pasarela. No cierres esta página.</p>`);
+  let r;
+  try { r = await API.enviar({ accion:"confirmar", sesion: q.get("sesion") }); }
+  catch (e) { r = { error:"No he podido verificar el pago ahora mismo." }; }
+
+  if (r.ok) { await cargarSemana(); exito(r.codigo, "Reserva pagada y confirmada"); return; }
+  mensaje("Atención", "No he podido confirmarlo",
+    `<p>${esc(r.error || "")} Si el cargo aparece en tu banco, escribe a hola@campoantoniomartin.com con la hora que reservaste y lo resolvemos.</p>
+     <button class="btn secundario" id="listo">Volver al calendario</button>`);
+  $("#listo").addEventListener("click", cerrarModal);
+})();
+
+/* ============================================================
+   NAVEGACIÓN
+   ============================================================ */
+$("#espacios").addEventListener("click", e => {
+  const b = e.target.closest("button[data-espacio]");
+  if (!b || b.dataset.espacio === espacio) return;
+  espacio = b.dataset.espacio;
+  document.querySelectorAll("#espacios button").forEach(x => x.classList.toggle("on", x === b));
+  pintar();
+});
+$("#sem-prev").addEventListener("click", () => { lunesActual = sumaDias(lunesActual,-7); cargarSemana(); });
+$("#sem-next").addEventListener("click", () => { lunesActual = sumaDias(lunesActual, 7); cargarSemana(); });
+$("#sem-hoy").addEventListener("click",  () => { lunesActual = lunesDe(new Date()); cargarSemana(); });
+
+cargarSemana();
+setInterval(pintarEstado, 60000);
+setInterval(() => { if (!velo.classList.contains("abierto")) cargarSemana(); }, 120000);
+</script>
