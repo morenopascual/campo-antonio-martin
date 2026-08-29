@@ -129,6 +129,17 @@ section{padding:5.5rem 0}
 
 /* ---------- reservas ---------- */
 #reservas{background:var(--hueso);border-top:1px solid var(--linea)}
+.barra-admin{display:none;align-items:center;gap:1rem;flex-wrap:wrap;background:var(--tinta);color:#fff;
+  padding:.8rem 1.2rem;margin-bottom:1.2rem;font-size:.88rem}
+.barra-admin.on{display:flex}
+.barra-admin b{font-family:var(--p);font-weight:600}
+.barra-admin button{margin-left:auto;background:none;border:1px solid rgba(255,255,255,.5);color:#fff;
+  padding:.4rem .9rem;font-family:var(--r);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.barra-admin button:hover{background:#fff;color:var(--tinta)}
+.slot.club{background:#E7E7E4;border-left:3px solid var(--tinta-2);font-family:var(--p);font-weight:500;font-size:.78rem}
+.ficha dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.2rem .8rem;font-size:.88rem}
+.ficha dt{color:var(--tinta-3);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding-top:.15rem}
+.ficha dd{margin:0}
 .espacios{display:flex;gap:.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--linea)}
 .espacios button{background:none;border:0;border-bottom:2px solid transparent;padding:.7rem .2rem;margin-right:1.6rem;
   font-family:var(--p);font-weight:500;font-size:1rem;color:var(--tinta-3);cursor:pointer;letter-spacing:-.01em}
@@ -369,6 +380,12 @@ footer a{color:var(--cesped-osc)}
       <div><b>Sábados y domingos:</b> las reservas se abren <b>cada martes</b>, una vez confirmados los partidos de TRC, Minifútbol y TotalSport. Hasta entonces aparecen bloqueados.</div>
     </div>
 
+    <div class="barra-admin" id="barra-admin">
+      <b>Modo gestión</b>
+      <span>Ves los datos completos y puedes dar de alta reservas sin cobro.</span>
+      <button id="salir-admin">Salir</button>
+    </div>
+
     <div class="espacios" id="espacios">
       <button data-espacio="campo" class="on">Campo</button>
       <button data-espacio="sala">Sala multiusos</button>
@@ -414,7 +431,7 @@ footer a{color:var(--cesped-osc)}
     </details>
     <details>
       <summary>¿Cómo anulo una reserva y cuándo me devuelven el dinero?</summary>
-      <div class="resp"><p>Toca tu reserva en el calendario e introduce el código de cuatro cifras que recibiste por correo. Hasta 48 horas antes se devuelve el importe pagado <b>menos 2 € de gastos de gestión</b>, al mismo medio de pago y en unos días hábiles. Esos 2 € son lo que cuesta la operación de pago, que la pasarela no nos devuelve cuando se anula.</p>
+      <div class="resp"><p>Toca tu reserva en el calendario e introduce el código de cuatro cifras que recibiste por correo. Hasta 48 horas antes se devuelve el importe pagado <b>menos 1 € de gastos de gestión</b>, al mismo medio de pago y en unos días hábiles. Ese euro cubre parte de lo que cuesta la operación de pago, que la pasarela no nos devuelve cuando se anula.</p>
       <p>Con menos de 48 horas escríbenos y lo valoramos: si podemos volver a alquilar la hora, se devuelve igual.</p></div>
     </details>
     <details>
@@ -464,7 +481,8 @@ footer a{color:var(--cesped-osc)}
   <div class="wrap copy">campoantoniomartin.com · Torrelodones Rugby Club ·
     <a href="legal.html#aviso">Aviso legal</a> ·
     <a href="legal.html#privacidad">Privacidad</a> ·
-    <a href="legal.html#condiciones">Condiciones de reserva</a>
+    <a href="legal.html#condiciones">Condiciones de reserva</a> ·
+    <a href="#reservas" id="acceso-gestion">Gestión</a>
   </div>
 </footer>
 
@@ -490,7 +508,8 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxM1mnhPAbTloJhNsGDR5Ll
 
 const HORA_INICIO = 9;
 const HORA_FIN    = 23;
-const SEMANAS_VISTA = 5;
+const SEMANAS_VISTA = 12;      // hay que poder ver una serie recurrente entera
+const MAX_SEMANAS = 8;         // tope de una reserva periódica hecha desde la web
 
 // Entrenamientos fijos de temporada. Solo afectan al campo, no a la sala.
 // Clave = día ISO (1 lunes … 7 domingo) → [inicio, fin, etiqueta, tipo]
@@ -544,6 +563,17 @@ const claveDia = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0
 const diaISO = d => ((d.getDay()+6)%7)+1;
 const fmtCorto = d => `${d.getDate()} ${MESES[d.getMonth()]}`;
 const euros = c => (c/100).toLocaleString("es-ES",{minimumFractionDigits:2, maximumFractionDigits:2}) + " €";
+const isoDe = d => claveDia(d);
+
+// Cuántas sesiones tendría la serie según lo marcado en el formulario
+function sesiones(fechaBase) {
+  const chk = $("#repetir"), hasta = $("#hasta");
+  if (!chk || !chk.checked || !hasta || !hasta.value) return 1;
+  const fin = new Date(hasta.value + "T00:00:00");
+  let n = 1, d = sumaDias(fechaBase, 7);
+  while (d <= fin && n < MAX_SEMANAS) { n++; d = sumaDias(d, 7); }
+  return n;
+}
 const esc = t => String(t == null ? "" : t).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
 
 function fijoDe(fecha, hora) {
@@ -570,6 +600,7 @@ const API = (() => {
     demo: !activa(),
     async leer(lunesISO) {
       if (!activa()) return { ok:true, reservas: demo[lunesISO] || {} };
+      if (adminPin) return await this.enviar({ accion:"admin", que:"leer", pin:adminPin, semana:lunesISO });
       const r = await fetch(`${API_URL}?accion=leer&semana=${lunesISO}`, { redirect:"follow" });
       if (!r.ok) throw new Error("HTTP " + r.status);
       return await r.json();
@@ -620,6 +651,7 @@ let lunesActual = lunesDe(new Date());
 let espacio = "campo";
 let reservas = {};
 let cargando = true;
+let adminPin = null;
 const $ = s => document.querySelector(s);
 const grid = $("#grid");
 const cajaError = $("#error-conexion");
@@ -687,7 +719,10 @@ function celda(fecha, hora, ahora) {
 
   const r = reservas[k];
   if (r && r.estado === "retenida") return `<span class="slot retenida">En proceso de pago<small>Vuelve en 35 min</small></span>`;
-  if (r) return `<button class="slot reservado" data-k="${k}">${esc(r.etiqueta)}<small>${esc(r.modalidad)}</small></button>`;
+  if (r) {
+    const club = r.cobro === "manual";
+    return `<button class="slot ${club ? "club" : "reservado"}" data-k="${k}">${esc(r.etiqueta)}<small>${esc(r.modalidad)}</small></button>`;
+  }
 
   if (diaISO(fecha) >= 6 && !finDeSemanaAbierto(fecha, ahora))
     return `<span class="slot bloqueado">Se abre el martes ${fmtCorto(sumaDias(lunesDe(fecha),1))}</span>`;
@@ -771,6 +806,30 @@ function abrirModal(k) {
   $("#modal-titulo").textContent = `${DIAS[diaISO(d)-1]} ${fmtCorto(d)} · ${hora}:00`;
   const r = reservas[k];
 
+  if (r && adminPin) {
+    $("#modal-eyebrow").textContent = "Ficha completa";
+    cuerpo.innerHTML = `
+      <div class="ficha"><dl>
+        <dt>Entidad</dt><dd>${esc(r.etiqueta)}</dd>
+        <dt>Modalidad</dt><dd>${esc(r.modalidad)}</dd>
+        <dt>Estado</dt><dd>${esc(r.estado)}${r.cobro === "manual" ? " · alta del club" : ""}</dd>
+        <dt>Importe</dt><dd>${esc(r.importe)} €</dd>
+        <dt>Contacto</dt><dd>${esc(r.contacto) || "—"}</dd>
+        <dt>Teléfono</dt><dd>${esc(r.telefono) || "—"}</dd>
+        <dt>Correo</dt><dd>${esc(r.email) || "—"}</dd>
+        <dt>Código</dt><dd>${esc(r.codigo)}</dd>
+        <dt>Cobro</dt><dd>${esc(r.cobro) || "—"}</dd>
+        ${r.serie ? `<dt>Serie</dt><dd>${esc(r.serie)}</dd>` : ""}
+        ${r.notas ? `<dt>Notas</dt><dd>${esc(r.notas)}</dd>` : ""}
+      </dl></div>
+      <p class="error" id="err"></p>
+      <button class="btn peligro" id="anular">Anular sin código</button>
+      <p class="nota" style="margin:.9rem 0 0;text-align:center">Anula solo esta fecha. El reembolso, si procede, se hace a mano en Stripe.</p>`;
+    $("#anular").addEventListener("click", () => anularAdmin(r.ref || k));
+    velo.classList.add("abierto");
+    return;
+  }
+
   if (r) {
     $("#modal-eyebrow").textContent = "Reserva confirmada";
     cuerpo.innerHTML = `
@@ -779,7 +838,7 @@ function abrirModal(k) {
       <input id="cod" inputmode="numeric" maxlength="8" placeholder="4 cifras">
       <p class="error" id="err"></p>
       <button class="btn peligro" id="anular">Anular esta reserva</button>
-      <p class="nota" style="margin:.9rem 0 0;text-align:center">Se devuelve el importe pagado menos 2 € de gastos de gestión</p>`;
+      <p class="nota" style="margin:.9rem 0 0;text-align:center">Se devuelve el importe pagado menos 1 € de gastos de gestión</p>`;
     $("#anular").addEventListener("click", () => anular(r.ref || k));
     velo.classList.add("abierto");
     return;
@@ -788,6 +847,9 @@ function abrirModal(k) {
   const esSala = esp === "sala";
   const cabenDos = !esSala && libre(d, hora + 1);
   const luzPorDefecto = hora >= 19 ? "con" : "sin";
+  const finde = diaISO(d) >= 6;
+
+  if (adminPin) { formularioClub(k, d, hora, esSala, finde); return; }
 
   $("#modal-eyebrow").textContent = "Nueva reserva";
   cuerpo.innerHTML = `
@@ -826,6 +888,13 @@ function abrirModal(k) {
       <div><label for="mail">Correo</label><input id="mail" inputmode="email" placeholder="tu@correo.com" maxlength="80"></div>
     </div>
 
+    ${finde ? "" : `
+    <label class="check"><input type="checkbox" id="repetir"><span>Repetir cada semana, mismo día y hora</span></label>
+    <div id="repetir-caja" style="display:none">
+      <label for="hasta">Repetir hasta</label>
+      <input type="date" id="hasta" min="${isoDe(sumaDias(d,7))}" max="${isoDe(sumaDias(d,7*(MAX_SEMANAS-1)))}" value="${isoDe(sumaDias(d,7))}">
+    </div>`}
+
     <label class="check"><input type="checkbox" id="consiente"><span>He leído y acepto las
       <a href="legal.html#condiciones" target="_blank" rel="noopener">condiciones de reserva</a> y la
       <a href="legal.html#privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
@@ -834,14 +903,21 @@ function abrirModal(k) {
     <p class="error" id="err"></p>
     <button class="btn" id="confirmar">Pagar y reservar</button>
     <p class="nota" style="margin:.9rem 0 0;text-align:center">Tarjeta, Apple Pay, Google Pay o Bizum<br>
-      Anulable hasta 48 h antes, con 2 € de gastos de gestión</p>`;
+      Anulable hasta 48 h antes, con 1 € de gastos de gestión</p>`;
 
   const recalcular = () => {
     const p = datosForm();
-    $("#precio").textContent = euros(precio(p.tipo, p.horas, p.luz, p.vestuarios));
-    $("#detalle-precio").textContent = p.horas > 1 ? `Total · ${p.horas} horas` : "Total · 1 hora";
+    const unidad = precio(p.tipo, p.horas, p.luz, p.vestuarios);
+    const n = sesiones(d);
+    if ($("#repetir-caja")) $("#repetir-caja").style.display = ($("#repetir") && $("#repetir").checked) ? "block" : "none";
+    $("#precio").textContent = euros(unidad * n);
+    $("#detalle-precio").textContent = n > 1
+      ? `${n} sesiones × ${euros(unidad)}`
+      : (p.horas > 1 ? `Total · ${p.horas} horas` : "Total · 1 hora");
   };
-  ["tipo","horas","luz","vest"].forEach(id => { const el = $("#"+id); if (el) el.addEventListener("change", recalcular); });
+  ["tipo","horas","luz","vest","repetir","hasta"].forEach(id => {
+    const el = $("#"+id); if (el) el.addEventListener("change", recalcular);
+  });
   recalcular();
   $("#confirmar").addEventListener("click", confirmar);
   velo.classList.add("abierto");
@@ -865,7 +941,8 @@ async function confirmar() {
   if (!$("#consiente").checked) { fallo("Tienes que aceptar las condiciones de reserva y la política de privacidad."); return; }
 
   const btn = $("#confirmar"); btn.disabled = true; btn.textContent = "Abriendo el pago…";
-  const carga = Object.assign({ accion:"reservar", id:slotActivo, entidad, contacto, telefono, email, consiente:true }, p);
+  const repetir = ($("#repetir") && $("#repetir").checked && $("#hasta") && $("#hasta").value) ? $("#hasta").value : "";
+  const carga = Object.assign({ accion:"reservar", id:slotActivo, entidad, contacto, telefono, email, consiente:true, repetir }, p);
   let r;
   try { r = await API.enviar(carga); }
   catch (e) { r = { error:"No he podido contactar con el servidor. Vuelve a intentarlo en un minuto." }; }
@@ -903,6 +980,101 @@ async function anular(ref) {
   await cargarSemana();
   cerrarModal();
 }
+
+/* ============================================================
+   PANEL DE GESTIÓN
+   ============================================================ */
+function formularioClub(k, d, hora, esSala, finde) {
+  $("#modal-eyebrow").textContent = "Alta del club";
+  cuerpo.innerHTML = `
+    <label for="entidad">Nombre de la reserva</label>
+    <input id="entidad" placeholder="Ej. Partido Sub 16 · TRC" maxlength="40">
+    <div class="fila-doble">
+      <div>
+        <label for="horas">Duración</label>
+        <select id="horas">${[1,2,3,4,5,6].map(n => `<option value="${n}">${n} hora${n>1?"s":""}</option>`).join("")}</select>
+      </div>
+      <div><label for="importe">Importe cobrado (€)</label>
+        <input id="importe" inputmode="decimal" value="0"></div>
+    </div>
+    ${finde ? '<p class="nota" style="margin:-.4rem 0 1rem">Fin de semana: la repetición semanal no está disponible.</p>' : `
+    <label class="check"><input type="checkbox" id="repetir"><span>Repetir cada semana</span></label>
+    <div id="repetir-caja" style="display:none">
+      <label for="hasta">Repetir hasta</label>
+      <input type="date" id="hasta" min="${isoDe(sumaDias(d,7))}" value="${isoDe(sumaDias(d,7))}">
+    </div>`}
+    <label for="notas">Notas internas</label>
+    <input id="notas" placeholder="Opcional" maxlength="120">
+    <p class="error" id="err"></p>
+    <button class="btn" id="crear">Guardar sin cobrar</button>
+    <p class="nota" style="margin:.9rem 0 0;text-align:center">Ocupa la franja igual que una reserva pagada. No se envía ningún correo.</p>`;
+
+  const caja = $("#repetir-caja"), chk = $("#repetir");
+  if (chk) chk.addEventListener("change", () => { caja.style.display = chk.checked ? "block" : "none"; });
+
+  $("#crear").addEventListener("click", async () => {
+    const entidad = $("#entidad").value.trim();
+    if (!entidad) { fallo("Ponle un nombre a la reserva."); return; }
+    const btn = $("#crear"); btn.disabled = true; btn.textContent = "Guardando…";
+    let r;
+    try {
+      r = await API.enviar({
+        accion:"admin", que:"crear", pin:adminPin, id:k, entidad,
+        horas: Number($("#horas").value),
+        importe: Number(String($("#importe").value).replace(",", ".")) || 0,
+        notas: $("#notas").value.trim(),
+        repetir: (chk && chk.checked && $("#hasta").value) ? $("#hasta").value : ""
+      });
+    } catch (e) { r = { error:"No he podido contactar con el servidor." }; }
+    if (r.error) { fallo(r.error); btn.disabled = false; btn.textContent = "Guardar sin cobrar"; return; }
+    await cargarSemana();
+    cerrarModal();
+  });
+  velo.classList.add("abierto");
+}
+
+async function anularAdmin(ref) {
+  if (!confirm("¿Anular esta reserva? Si estaba pagada, el reembolso hay que hacerlo a mano en Stripe.")) return;
+  const btn = $("#anular"); btn.disabled = true; btn.textContent = "Anulando…";
+  let r;
+  try { r = await API.enviar({ accion:"admin", que:"anular", pin:adminPin, id:ref }); }
+  catch (e) { r = { error:"No he podido contactar con el servidor." }; }
+  if (r.error) { fallo(r.error); btn.disabled = false; btn.textContent = "Anular sin código"; return; }
+  await cargarSemana();
+  cerrarModal();
+}
+
+$("#acceso-gestion").addEventListener("click", e => {
+  e.preventDefault();
+  if (adminPin) return;
+  mensaje("Acceso restringido", "Panel de gestión", `
+    <label for="pin">PIN</label>
+    <input id="pin" type="password" inputmode="numeric" autocomplete="off">
+    <p class="error" id="err"></p>
+    <button class="btn" id="entrar">Entrar</button>`);
+  $("#pin").focus();
+  const entrar = async () => {
+    const pin = $("#pin").value.trim();
+    if (!pin) return;
+    const btn = $("#entrar"); btn.disabled = true; btn.textContent = "Comprobando…";
+    let r;
+    try { r = await API.enviar({ accion:"admin", que:"entrar", pin }); }
+    catch (e) { r = { error:"No he podido contactar con el servidor." }; }
+    if (r.error) { fallo(r.error); btn.disabled = false; btn.textContent = "Entrar"; return; }
+    adminPin = pin;
+    $("#barra-admin").classList.add("on");
+    cerrarModal();
+    await cargarSemana();
+  };
+  $("#entrar").addEventListener("click", entrar);
+  $("#pin").addEventListener("keydown", ev => { if (ev.key === "Enter") entrar(); });
+});
+
+$("#salir-admin").addEventListener("click", () => {
+  adminPin = null;
+  $("#barra-admin").classList.remove("on");
+  cargarSemana();
+});
 
 /* Vuelta desde la pasarela de pago */
 (async function vueltaDelPago() {
