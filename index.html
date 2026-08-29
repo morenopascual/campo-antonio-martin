@@ -414,7 +414,8 @@ footer a{color:var(--cesped-osc)}
     </details>
     <details>
       <summary>¿Cómo anulo una reserva y cuándo me devuelven el dinero?</summary>
-      <div class="resp"><p>Toca tu reserva en el calendario e introduce el código de cuatro cifras que recibiste por correo. Hasta 48 horas antes se devuelve el importe completo al mismo medio de pago, en unos días hábiles. Con menos de 48 horas escríbenos y lo valoramos: si podemos volver a alquilar la hora, se devuelve igual.</p></div>
+      <div class="resp"><p>Toca tu reserva en el calendario e introduce el código de cuatro cifras que recibiste por correo. Hasta 48 horas antes se devuelve el importe pagado <b>menos 2 € de gastos de gestión</b>, al mismo medio de pago y en unos días hábiles. Esos 2 € son lo que cuesta la operación de pago, que la pasarela no nos devuelve cuando se anula.</p>
+      <p>Con menos de 48 horas escríbenos y lo valoramos: si podemos volver a alquilar la hora, se devuelve igual.</p></div>
     </details>
     <details>
       <summary>¿Se juega si llueve?</summary>
@@ -485,7 +486,7 @@ footer a{color:var(--cesped-osc)}
 
 // Pega aquí la URL /exec de la aplicación web de Apps Script.
 // Vacío = modo demostración: se puede probar todo, pero nada se guarda.
-const API_URL = "https://script.google.com/macros/s/AKfycbxM1mnhPAbTloJhNsGDR5LlNIiISF-61rJTeSkx9AeaKE8TmA5g9LKSHZs_BsviakiW/exec";
+const API_URL = "";
 
 const HORA_INICIO = 9;
 const HORA_FIN    = 23;
@@ -777,7 +778,8 @@ function abrirModal(k) {
       <label for="cod">Código para anular</label>
       <input id="cod" inputmode="numeric" maxlength="8" placeholder="4 cifras">
       <p class="error" id="err"></p>
-      <button class="btn peligro" id="anular">Anular esta reserva</button>`;
+      <button class="btn peligro" id="anular">Anular esta reserva</button>
+      <p class="nota" style="margin:.9rem 0 0;text-align:center">Se devuelve el importe pagado menos 2 € de gastos de gestión</p>`;
     $("#anular").addEventListener("click", () => anular(r.ref || k));
     velo.classList.add("abierto");
     return;
@@ -831,7 +833,8 @@ function abrirModal(k) {
     <div class="resumen"><span id="detalle-precio">Total</span><b id="precio">—</b></div>
     <p class="error" id="err"></p>
     <button class="btn" id="confirmar">Pagar y reservar</button>
-    <p class="nota" style="margin:.9rem 0 0;text-align:center">Tarjeta, Apple Pay, Google Pay o Bizum</p>`;
+    <p class="nota" style="margin:.9rem 0 0;text-align:center">Tarjeta, Apple Pay, Google Pay o Bizum<br>
+      Anulable hasta 48 h antes, con 2 € de gastos de gestión</p>`;
 
   const recalcular = () => {
     const p = datosForm();
