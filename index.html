@@ -110,6 +110,9 @@ section{padding:5.5rem 0}
 .galeria img{width:100%;height:100%;object-fit:cover}
 .galeria .col{display:grid;gap:1.5rem}
 .pie{font-size:.78rem;color:var(--tinta-3);padding-top:.6rem;letter-spacing:.02em}
+.mapa{font-family:var(--r);font-weight:500;font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cesped-osc);text-decoration:none;border-bottom:2px solid var(--ambar);padding-bottom:3px}
+.mapa:hover{border-bottom-color:var(--cesped)}
 
 /* tarifas */
 .tarifas{width:100%;border-collapse:collapse;font-size:.97rem}
@@ -177,6 +180,9 @@ section{padding:5.5rem 0}
 .slot.fijo.mini{border-left-color:var(--azul);background:var(--azul-suave)}
 .slot.fijo.totalsport{border-left-color:var(--ambar);background:var(--ambar-suave)}
 .slot.fijo.comp{border-left-color:var(--cesped);background:var(--cesped-suave)}
+.slot.fijo.judo{border-left-color:#6B63B8;background:#EFEDF9}
+.slot.fijo.karate{border-left-color:#B5714C;background:#FBEFE9}
+.slot.fijo.aikido{border-left-color:#3E7C88;background:#E9F1F2}
 .slot.reservado{background:var(--ambar);color:#3A2E10;font-family:var(--p);font-weight:500;font-size:.78rem}
 .slot.reservado small{color:rgba(58,46,16,.7)}
 .slot.reservado:hover{background:var(--ambar-osc);color:#fff}
@@ -225,7 +231,7 @@ input:focus,select:focus{outline:none;border-color:var(--cesped);box-shadow:0 0 
 
 /* ---------- pie ---------- */
 footer{background:var(--hueso);border-top:1px solid var(--linea);padding:3.5rem 0 3rem;font-size:.9rem;color:var(--tinta-2)}
-footer .wrap{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2.5rem}
+footer .wrap{display:grid;grid-template-columns:1.4fr 1fr;gap:3rem}
 footer img{width:96px;margin-bottom:1rem}
 footer b{color:var(--tinta);font-family:var(--p);font-weight:600;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:.7rem}
 footer a{color:var(--cesped-osc)}
@@ -266,7 +272,7 @@ footer a{color:var(--cesped-osc)}
 <div class="hero" id="inicio">
   <div class="wrap hero-grid">
     <div class="hero-card">
-      <span class="eyebrow">Torrelodones · gestión Torrelodones Rugby Club</span>
+      <span class="eyebrow">Torrelodones</span>
       <span class="wordmark"><span class="l1">campo</span><span class="l2">antoniomart<i>í</i>n</span></span>
       <p>Hierba artificial homologada para rugby, fútbol 11 y fútbol 7, con iluminación LED, gradas y vestuarios. De 9:00 a 23:00, todos los días.</p>
       <div class="acciones">
@@ -301,7 +307,8 @@ footer a{color:var(--cesped-osc)}
         <span class="eyebrow">La instalación</span>
         <h2>El campo de rugby y fútbol<br>de Torrelodones</h2>
       </div>
-      <p>Superficie de última generación con marcaje simultáneo de rugby, fútbol 11 y fútbol 7. El edificio de vestuarios, con su celosía de madera, cierra el lado norte y protege del viento. Gradas para 300 personas y aparcamiento gratuito en la entrada.</p>
+      <p>Superficie de última generación con marcaje simultáneo de rugby, fútbol 11 y fútbol 7. El edificio de vestuarios, con su celosía de madera, cierra el lado norte y protege del viento. Gradas para 300 personas y fácil aparcamiento en los alrededores, junto al Centro Comercial Espacio Torrelodones.</p>
+      <p style="margin-top:1rem"><a href="https://maps.app.goo.gl/1yAVSSsiVxuQuYum9" target="_blank" rel="noopener" class="mapa">Dónde estamos</a></p>
     </div>
     <div class="galeria">
       <figure>
@@ -314,7 +321,8 @@ footer a{color:var(--cesped-osc)}
         </figure>
         <div style="background:var(--cesped-suave);padding:1.6rem;border-left:4px solid var(--cesped)">
           <h3>Reserva en dos minutos</h3>
-          <p style="margin:.6rem 0 0;font-size:.92rem;color:var(--tinta-2)">Elige la hora libre, paga con tarjeta o Bizum y recibes la confirmación por correo. Sin registro, sin llamadas, sin esperar respuesta.</p>
+          <p style="margin:.6rem 0 .9rem;font-size:.92rem;color:var(--tinta-2)">Elige la hora libre, paga con tarjeta o Bizum y recibes la confirmación por correo. Sin registro, sin llamadas, sin esperar respuesta.</p>
+          <a class="btn" href="#reservas" style="padding:.7rem 1.2rem;font-size:.72rem">Ver calendario</a>
         </div>
       </div>
     </div>
@@ -375,20 +383,14 @@ footer a{color:var(--cesped-osc)}
       <button class="btn secundario" id="sem-hoy" style="margin-left:auto">Semana actual</button>
     </div>
 
-    <div class="leyenda">
-      <span><i style="background:#fff;border:1px dashed #B9D2B4"></i>Libre</span>
-      <span><i style="background:var(--ambar)"></i>Reservado</span>
-      <span><i style="background:#FDF6E7;border:1px dashed var(--ambar-osc)"></i>En proceso de pago</span>
-      <span><i style="background:#F3F3F1;border-left:3px solid var(--tinta)"></i>Entrenamiento TRC</span>
-      <span><i style="background:var(--azul-suave);border-left:3px solid var(--azul)"></i>Entrenamiento Minifútbol</span>
-    </div>
+    <div class="leyenda" id="leyenda"></div>
 
     <div class="aviso" id="error-conexion" style="display:none;background:#FBECEC;border-left-color:#A33"></div>
 
     <div class="tabla-scroll">
       <div class="grid" id="grid" role="grid" aria-label="Calendario semanal de reservas"></div>
     </div>
-    <p class="nota">Los entrenamientos de TRC y Minifútbol están fijados de temporada y no se pueden reservar. Si necesitas una de esas franjas para un amistoso, escríbenos y lo miramos.</p>
+    <p class="nota">Los entrenamientos del TRC y de Minifútbol, y las clases de judo, kárate y aikido en la sala, están fijados de temporada y no se pueden reservar. Si necesitas una de esas franjas, escríbenos y lo miramos.</p>
   </div>
 </section>
 
@@ -399,7 +401,7 @@ footer a{color:var(--cesped-osc)}
         <span class="eyebrow">Preguntas frecuentes</span>
         <h2>Lo que siempre nos preguntan</h2>
       </div>
-      <p>Si no encuentras lo que buscas, escribe a <a href="mailto:hola@campoantoniomartin.com" style="color:var(--cesped-osc)">hola@campoantoniomartin.com</a> y te contestamos el mismo día.</p>
+      <p>Si no encuentras lo que buscas, escribe a <a href="mailto:reservas@campoantoniomartin.com" style="color:var(--cesped-osc)">reservas@campoantoniomartin.com</a>. Intentaremos contestarte lo antes posible.</p>
     </div>
 
     <details open>
@@ -436,11 +438,11 @@ footer a{color:var(--cesped-osc)}
     </details>
     <details>
       <summary>¿Hay aparcamiento y cantina?</summary>
-      <div class="resp"><p>Aparcamiento gratuito junto al acceso, con unas 60 plazas. La cantina abre los días de partido y los martes y jueves por la tarde.</p></div>
+      <div class="resp"><p>Suele haber suficiente aparcamiento en los alrededores, y si no encuentras sitio puedes usar el del Centro Comercial Espacio Torrelodones. La cantina está pendiente de apertura; próximamente os informaremos de sus horarios.</p></div>
     </details>
     <details>
       <summary>Somos una empresa y queremos organizar un torneo</summary>
-      <div class="resp"><p>Escríbenos con fechas y número de equipos. Para eventos de más de tres horas seguidas preparamos presupuesto cerrado con árbitros, megafonía, cantina y fotógrafo.</p></div>
+      <div class="resp"><p>Escríbenos a <a href="mailto:reservas@campoantoniomartin.com">reservas@campoantoniomartin.com</a> con fechas y número de equipos, y os hacemos una propuesta a medida.</p></div>
     </details>
   </div>
 </section>
@@ -449,15 +451,13 @@ footer a{color:var(--cesped-osc)}
   <div class="wrap">
     <div>
       <img src="img/logo.png" alt="Campo Antonio Martín">
-      <p style="margin:0">Instalación deportiva municipal gestionada por el Torrelodones Rugby Club. Abierta de 9:00 a 23:00 de lunes a domingo.</p>
+      <p style="margin:0">Instalación deportiva municipal con gestión deportiva asumida por Torrelodones Rugby Club. Abierta de 9:00 a 23:00 de lunes a domingo.</p>
     </div>
     <div>
       <b>Contacto</b>
-      <p>hola@campoantoniomartin.com<br>+34 600 000 000<br>Torrelodones, Madrid</p>
-    </div>
-    <div>
-      <b>Antes de venir</b>
-      <p>Prohibidos los tacos de aluminio.<br>Pago previo a la hora reservada.<br>Anulación gratuita hasta 48 h antes.</p>
+      <p><a href="mailto:reservas@campoantoniomartin.com">reservas@campoantoniomartin.com</a><br>
+      +34 650 69 66 01<br>
+      <a href="https://maps.app.goo.gl/1yAVSSsiVxuQuYum9" target="_blank" rel="noopener">Torrelodones, Madrid</a></p>
     </div>
   </div>
   <div class="wrap copy">campoantoniomartin.com · Torrelodones Rugby Club ·
@@ -494,13 +494,32 @@ const SEMANAS_VISTA = 5;
 // Entrenamientos fijos de temporada. Solo afectan al campo, no a la sala.
 // Clave = día ISO (1 lunes … 7 domingo) → [inicio, fin, etiqueta, tipo]
 let FIJOS = {
-  1: [[17,22,"Entrenamiento Minifútbol","mini"]],
-  2: [[17,22,"Entrenamiento TRC","trc"]],
-  3: [[17,22,"Entrenamiento Minifútbol","mini"]],
-  4: [[17,22,"Entrenamiento TRC","trc"]],
-  5: [[17,18,"Entrenamiento Minifútbol","mini"],[18,22,"Entrenamiento TRC","trc"]],
-  6: [],
-  7: []
+  campo: {
+    1: [[17,22,"Entrenamiento Minifútbol","mini"]],
+    2: [[17,22,"Entrenamiento TRC","trc"]],
+    3: [[17,22,"Entrenamiento Minifútbol","mini"]],
+    4: [[17,22,"Entrenamiento TRC","trc"]],
+    5: [[17,18,"Entrenamiento Minifútbol","mini"],[18,22,"Entrenamiento TRC","trc"]],
+    6: [], 7: []
+  },
+  // Clases de los clubes en la sala. El horario real acaba a y media en algunos
+  // casos: se bloquea la hora entera para no vender una franja a medio ocupar.
+  sala: {
+    1: [[17,22,"Judo","judo"]],
+    2: [[17,20,"Kárate","karate"],[20,21,"Aikido","aikido"]],
+    3: [[17,22,"Judo","judo"]],
+    4: [[17,20,"Kárate","karate"],[20,21,"Aikido","aikido"]],
+    5: [[16,19,"Kárate","karate"]],
+    6: [], 7: []
+  }
+};
+
+const LEYENDA = {
+  campo: [["#F3F3F1","var(--tinta)","Entrenamiento TRC"],
+          ["var(--azul-suave)","var(--azul)","Entrenamiento Minifútbol"]],
+  sala:  [["#EFEDF9","#6B63B8","Judo"],
+          ["#FBEFE9","#B5714C","Kárate"],
+          ["#E9F1F2","#3E7C88","Aikido"]]
 };
 
 // Céntimos. Solo para mostrar el importe: el precio bueno lo calcula el servidor.
@@ -527,8 +546,7 @@ const euros = c => (c/100).toLocaleString("es-ES",{minimumFractionDigits:2, maxi
 const esc = t => String(t == null ? "" : t).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
 
 function fijoDe(fecha, hora) {
-  if (espacio !== "campo") return null;
-  const lista = FIJOS[diaISO(fecha)] || [];
+  const lista = (FIJOS[espacio] || {})[diaISO(fecha)] || [];
   for (const [ini, fin, etiqueta, tipo] of lista) if (hora >= ini && hora < fin) return { etiqueta, tipo, ini, fin };
   return null;
 }
@@ -656,6 +674,7 @@ function pintar() {
   }
   grid.innerHTML = html;
   grid.querySelectorAll("button.slot[data-k]").forEach(b => b.addEventListener("click", () => abrirModal(b.dataset.k)));
+  pintarLeyenda();
 }
 
 function celda(fecha, hora, ahora) {
@@ -684,6 +703,17 @@ function libre(fecha, hora) {
   if (reservas[clave(fecha, hora)]) return false;
   if (diaISO(fecha) >= 6 && !finDeSemanaAbierto(fecha, new Date())) return false;
   return true;
+}
+
+function pintarLeyenda() {
+  const base = [
+    ['<i style="background:#fff;border:1px dashed #B9D2B4"></i>', "Libre"],
+    ['<i style="background:var(--ambar)"></i>', "Reservado"],
+    ['<i style="background:#FDF6E7;border:1px dashed var(--ambar-osc)"></i>', "En proceso de pago"]
+  ].map(([i, t]) => `<span>${i}${t}</span>`);
+  const propios = (LEYENDA[espacio] || []).map(([bg, bd, t]) =>
+    `<span><i style="background:${bg};border-left:3px solid ${bd}"></i>${t}</span>`);
+  $("#leyenda").innerHTML = base.concat(propios).join("");
 }
 
 /* ============================================================
