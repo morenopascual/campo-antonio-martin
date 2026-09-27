@@ -480,7 +480,7 @@ function pintarCifras() {
   const cean = datos.turnos.filter(t => t.asignado === P).reduce((a,t) => a + t.fin - t.ini, 0);
   const pend = datos.turnos.filter(t => !t.asignado);
   const minPend = pend.reduce((a,t) => a + t.fin - t.ini, 0);
-  const deVol = datos.turnos.filter(t => t.tipo !== P);
+  const deVol = datos.turnos;
   const cubVol = deVol.filter(t => t.asignado && t.asignado !== P);
   const sinP = datos.dias.reduce((a,d) => a + restar(d.obligatorio,
     datos.turnos.filter(t => t.fecha === d.fecha).map(t => [t.ini, t.fin])).reduce((s,h) => s + h[1]-h[0], 0), 0);
@@ -488,7 +488,7 @@ function pintarCifras() {
   $("#cifras").innerHTML = `
     <div class="cifra cean"><b>${dur(cean)}</b><span>de CEAN esta semana · <strong>${euros(cean)}</strong></span>
       <em>${minPend ? `Si no se cubren los pendientes: ${dur(cean + minPend)} · ${euros(cean + minPend)}` : "Todos los turnos tienen a alguien"}</em></div>
-    <div class="cifra vol"><b>${cubVol.length} de ${deVol.length}</b><span>turnos cubiertos por voluntarios</span></div>
+    <div class="cifra vol"><b>${cubVol.length} de ${deVol.length}</b><span>franjas cubiertas por voluntarios</span></div>
     <div class="cifra pend"><b>${pend.length}</b><span>turnos sin asignar</span>${minPend ? `<em>${dur(minPend)}</em>` : ""}</div>
     <div class="cifra sin"><b>${dur(sinP)}</b><span>de horario obligatorio sin personal</span></div>`;
 }
@@ -532,8 +532,8 @@ function pintarAlertas() {
     const t = datos.turnos.find(x => x.fecha === d.fecha && x.alertas);
     if (t) t.alertas.split(" · ").forEach(a => lis.push(`<li><b>${d.nombre}</b>${esc(a)}</li>`));
   });
-  const pend = datos.turnos.filter(t => !t.asignado && t.tipo !== datos.proveedor);
-  if (pend.length) lis.unshift(`<li><b>Voluntariado</b>${pend.length} turno${pend.length > 1 ? "s" : ""} sin voluntario. A 72 h del inicio pasan solos a CEAN.</li>`);
+  const pend = datos.turnos.filter(t => !t.asignado);
+  if (pend.length) lis.unshift(`<li><b>Sin asignar</b>${pend.length} franja${pend.length > 1 ? "s" : ""} sin nadie. A 72 h del inicio pasan solas a CEAN.</li>`);
   $("#alertas").innerHTML = lis.length ? lis.join("") : `<li class="vacio">Sin avisos esta semana.</li>`;
 }
 
