@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Turnos · Campo Antonio Martín</title>
+<link rel="icon" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta:#3A3A3C; --tinta-2:#6C6C6E; --tinta-3:#9B9B9C;
+  --ambar:#DFA83C; --ambar-osc:#B8862A; --ambar-suave:#FAF1DE;
+  --cesped:#45803A; --cesped-osc:#2F5E28; --cesped-suave:#EDF3E9;
+  --azul:#4A6E8F; --azul-osc:#34526D; --azul-suave:#E6EDF4;
+  --rosa:#C4574A; --rosa-suave:#FBEAE7;
+  --linea:#E6E6E1; --hueso:#FAFAF8;
+  --lamas:repeating-linear-gradient(90deg,var(--ambar) 0 3px,transparent 3px 8px);
+  --p:"Poppins",system-ui,sans-serif; --r:"Roboto",system-ui,Arial,sans-serif;
+  --pxmin:1px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--hueso);color:var(--tinta);font-family:var(--r);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--p);margin:0;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+a{color:inherit}
+.wrap{width:min(1400px,95vw);margin:0 auto}
+.lamas{height:6px;background:var(--lamas)}
+
+/* cabecera */
+.topbar{background:#fff;border-bottom:1px solid var(--linea)}
+.topbar .wrap{display:flex;align-items:center;gap:1rem;height:66px}
+.marca{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+.marca img{width:40px}
+.marca span{font-family:var(--p);font-weight:600;font-size:1rem;letter-spacing:-.01em}
+.marca small{display:block;font-family:var(--r);font-weight:400;font-size:.78rem;color:var(--tinta-3);letter-spacing:0}
+.salir{margin-left:auto;background:none;border:1px solid var(--linea);padding:.45rem .9rem;font-family:var(--r);font-size:.82rem;cursor:pointer;color:var(--tinta-2)}
+.salir:hover{border-color:var(--tinta);color:var(--tinta)}
+
+main{padding:1.6rem 0 4rem}
+
+/* semana */
+.barra-semana{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.3rem}
+.nav-sem{display:flex;gap:.35rem}
+.nav-sem button{height:38px;min-width:38px;padding:0 .7rem;border:1px solid var(--linea);background:#fff;cursor:pointer;font-family:var(--r);font-size:.9rem;color:var(--tinta)}
+.nav-sem button:hover{border-color:var(--tinta);background:var(--tinta);color:#fff}
+.rango{font-size:1.5rem}
+.actualizado{margin-left:auto;font-size:.8rem;color:var(--tinta-3)}
+
+/* cifras de la semana: la de CEAN manda */
+.cifras{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border:1px solid var(--linea);background:#fff;margin-bottom:1.3rem}
+.cifra{padding:1.1rem 1.3rem;border-right:1px solid var(--linea)}
+.cifra:last-child{border-right:0}
+.cifra b{display:block;font-family:var(--p);font-weight:600;font-size:1.9rem;line-height:1.05;letter-spacing:-.03em}
+.cifra span{font-size:.84rem;color:var(--tinta-2)}
+.cifra em{display:block;font-style:normal;font-size:.8rem;color:var(--tinta-3);margin-top:.3rem}
+.cifra.cean{background:var(--azul-suave);border-left:5px solid var(--azul)}
+.cifra.cean b{font-size:2.6rem;color:var(--azul-osc)}
+.cifra.vol b{color:var(--cesped-osc)}
+.cifra.pend b{color:var(--ambar-osc)}
+.cifra.sin b{color:var(--rosa)}
+
+.leyenda{display:flex;gap:1.3rem;flex-wrap:wrap;margin:0 0 .8rem;font-size:.8rem;color:var(--tinta-2);align-items:center}
+.leyenda i{display:inline-block;width:14px;height:14px;margin-right:.45rem;vertical-align:-2px;border-radius:2px}
+.leyenda .ayuda{margin-left:auto;color:var(--tinta-3)}
+
+/* rejilla */
+.tabla-scroll{overflow-x:auto;background:#fff;border:1px solid var(--linea)}
+.rejilla{display:grid;grid-template-columns:58px repeat(7,minmax(150px,1fr));min-width:1110px}
+.cab{position:sticky;top:0;z-index:5;background:#fff;border-bottom:2px solid var(--tinta);border-right:1px solid var(--linea);padding:.7rem .6rem .6rem;min-height:92px}
+.cab.hora{border-right:1px solid var(--linea)}
+.cab b{display:block;font-family:var(--p);font-weight:600;font-size:.98rem;text-transform:capitalize}
+.cab span{display:block;font-size:.76rem;color:var(--tinta-3)}
+.cab.hoy{box-shadow:inset 0 -4px 0 var(--cesped)}
+.cab.hoy b{color:var(--cesped-osc)}
+.modo{display:inline-flex;margin-top:.4rem;border:1px solid var(--linea)}
+.modo button{border:0;background:#fff;font-family:var(--r);font-size:.72rem;padding:.25rem .5rem;cursor:pointer;color:var(--tinta-3)}
+.modo button.on{background:var(--tinta);color:#fff}
+.modo button:not(.on):hover{color:var(--tinta)}
+.aviso-dia{display:inline-block;margin-top:.35rem;margin-left:.3rem;font-size:.72rem;color:var(--rosa);font-weight:500;cursor:help}
+
+.col-horas{position:relative;border-right:1px solid var(--linea)}
+.col-horas span{position:absolute;right:.5rem;transform:translateY(-50%);font-size:.74rem;color:var(--tinta-3)}
+.dia{position:relative;border-right:1px solid var(--linea);
+  background:repeating-linear-gradient(-45deg,#fff 0 6px,#F1F1EE 6px 12px)}
+.dia .linea-hora{position:absolute;left:0;right:0;border-top:1px solid var(--linea);pointer-events:none}
+.dia .obl{position:absolute;left:0;right:0;background:#fff}
+.dia .ahora{position:absolute;left:0;right:0;border-top:2px solid var(--rosa);z-index:4;pointer-events:none}
+
+/* actividad: carril estrecho a la izquierda */
+.act{position:absolute;left:3px;width:calc(32% - 5px);background:#F3F3F1;border-left:3px solid var(--tinta-2);
+  font-size:.66rem;line-height:1.2;padding:.25rem .3rem;overflow:hidden;color:var(--tinta-2);z-index:2}
+.act.sala{border-left-color:#6B63B8;background:#EFEDF9}
+.act b{display:block;font-weight:500;color:var(--tinta)}
+
+/* hueco obligatorio sin nadie */
+.sinp{position:absolute;left:32%;right:3px;z-index:1;
+  background:repeating-linear-gradient(-45deg,var(--rosa-suave) 0 6px,#fff 6px 12px);border:1px dashed #E3A69D;
+  font-size:.68rem;color:var(--rosa);padding:.2rem .4rem;overflow:hidden}
+
+/* turnos: carril ancho a la derecha */
+.t{position:absolute;left:32%;right:3px;z-index:3;padding:.35rem .5rem;overflow:hidden;cursor:pointer;
+  font-size:.74rem;line-height:1.25;border:1px solid transparent;border-left-width:4px;user-select:none;
+  transition:box-shadow .12s ease}
+.t:hover{box-shadow:0 2px 8px rgba(58,58,60,.18)}
+.t:focus-visible{outline:2px solid var(--tinta);outline-offset:1px}
+.t b{display:block;font-family:var(--p);font-weight:600;font-size:.84rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t span{display:block;color:var(--tinta-2)}
+.t .tarea{font-weight:500}
+.t .nota{position:absolute;top:.3rem;right:.4rem;font-size:.7rem}
+.t.vol{background:var(--cesped-suave);border-color:#C9DDC3;border-left-color:var(--cesped)}
+.t.vol b{color:var(--cesped-osc)}
+.t.cean{background:var(--azul-suave);border-color:#C6D4E2;border-left-color:var(--azul)}
+.t.cean b{color:var(--azul-osc)}
+.t.pend{background:var(--ambar-suave);border:1px dashed var(--ambar-osc);border-left:4px solid var(--ambar)}
+.t.pend b{color:#8A6418}
+.t.guardando{opacity:.5}
+
+/* bloques inferiores */
+.bloques{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem;margin-top:1.6rem}
+.bloque{background:#fff;border:1px solid var(--linea);padding:1.2rem 1.3rem}
+.bloque h2{font-size:1.15rem;margin-bottom:.9rem;display:flex;align-items:baseline;gap:.8rem}
+.bloque h2 small{font-family:var(--r);font-weight:400;font-size:.82rem;color:var(--tinta-3);letter-spacing:0}
+.pedido{width:100%;border-collapse:collapse;font-size:.88rem}
+.pedido th{text-align:left;font-weight:500;font-size:.76rem;color:var(--tinta-3);padding:0 .6rem .5rem 0;border-bottom:1px solid var(--tinta)}
+.pedido td{padding:.55rem .6rem .55rem 0;border-bottom:1px solid var(--linea);vertical-align:top}
+.pedido td.num,.pedido th.num{text-align:right;white-space:nowrap}
+.pedido tfoot td{font-family:var(--p);font-weight:600;border-bottom:0;padding-top:.8rem}
+.pedido tr.prev td{color:var(--ambar-osc)}
+.vacio{color:var(--tinta-3);font-size:.9rem;margin:0}
+.btn{display:inline-block;font-family:var(--r);font-weight:500;font-size:.85rem;background:var(--cesped);color:#fff;border:0;
+  padding:.7rem 1.2rem;cursor:pointer;border-radius:2px}
+.btn:hover{background:var(--cesped-osc)}
+.btn.sec{background:#fff;color:var(--tinta);border:1px solid var(--tinta)}
+.btn.sec:hover{background:var(--tinta);color:#fff}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.acciones-pedido{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+.alertas{list-style:none;margin:0;padding:0}
+.alertas li{padding:.6rem 0;border-bottom:1px solid var(--linea);font-size:.88rem}
+.alertas li:last-child{border-bottom:0}
+.alertas b{font-family:var(--p);font-weight:600;text-transform:capitalize;margin-right:.4rem}
+
+/* modal */
+.velo{position:fixed;inset:0;background:rgba(58,58,60,.55);display:none;place-items:center;z-index:100;padding:1rem}
+.velo.abierto{display:grid}
+.modal{background:#fff;width:min(440px,100%);max-height:92vh;overflow-y:auto;border-top:5px solid var(--cesped)}
+.modal-cab{padding:1.3rem 1.5rem 1rem;border-bottom:1px solid var(--linea);position:relative}
+.modal-cab p{margin:.35rem 0 0;font-size:.88rem;color:var(--tinta-2)}
+.modal-cuerpo{padding:1.3rem 1.5rem 1.5rem}
+.cerrar{position:absolute;top:.8rem;right:1rem;background:none;border:0;color:var(--tinta-3);font-size:1.6rem;cursor:pointer;line-height:1}
+.cerrar:hover{color:var(--tinta)}
+label{display:block;font-size:.8rem;font-weight:500;color:var(--tinta-2);margin:0 0 .35rem}
+input{width:100%;padding:.7rem .8rem;border:1px solid var(--linea);background:#fff;font-family:var(--r);font-size:1rem;border-radius:2px;margin-bottom:1rem;color:var(--tinta)}
+input:focus{outline:none;border-color:var(--cesped);box-shadow:0 0 0 3px rgba(69,128,58,.15)}
+.rapidos{display:flex;gap:.5rem;margin:-.4rem 0 1.1rem;flex-wrap:wrap}
+.rapidos button{border:1px solid var(--linea);background:#fff;font-family:var(--r);font-size:.82rem;padding:.4rem .75rem;cursor:pointer;border-radius:2px}
+.rapidos button.cean{border-color:#C6D4E2;background:var(--azul-suave);color:var(--azul-osc)}
+.rapidos button:hover{border-color:var(--tinta)}
+.modal .btn{width:100%;padding:.9rem}
+.error{color:#A33;font-size:.85rem;margin:-.5rem 0 .9rem;font-weight:500;display:none}
+.error.visible{display:block}
+.pin{font-family:var(--p);font-size:1.6rem;letter-spacing:.5em;text-align:center}
+
+.cargando{position:fixed;inset:0;background:rgba(250,250,248,.7);display:none;place-items:center;z-index:90}
+.cargando.on{display:grid}
+.cargando div{background:#fff;border:1px solid var(--linea);padding:1rem 1.4rem;font-size:.92rem;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+
+@media (max-width:900px){
+  .cifras{grid-template-columns:1fr 1fr}
+  .cifra.cean{grid-column:1/-1;border-right:0;border-bottom:1px solid var(--linea)}
+  .cifra:nth-child(3){border-right:0}
+  .cifra:nth-child(4){grid-column:1/-1;border-top:1px solid var(--linea)}
+  .bloques{grid-template-columns:1fr}
+  .leyenda .ayuda{margin-left:0;width:100%}
+  .actualizado{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){.t{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="marca" href="index.html">
+      <img src="img/logo.png" alt="">
+      <span>Turnos de la instalación<small>Campo Antonio Martín</small></span>
+    </a>
+    <button class="salir" id="salir" hidden>Salir</button>
+  </div>
+</header>
+<div class="lamas"></div>
+
+<main class="wrap" id="app" hidden>
+  <div class="barra-semana">
+    <div class="nav-sem">
+      <button id="sem-prev" aria-label="Semana anterior">‹</button>
+      <button id="sem-hoy">Esta semana</button>
+      <button id="sem-next" aria-label="Semana siguiente">›</button>
+    </div>
+    <h1 class="rango" id="rango">—</h1>
+    <span class="actualizado" id="actualizado"></span>
+  </div>
+
+  <div class="cifras" id="cifras"></div>
+
+  <div class="leyenda">
+    <span><i style="background:var(--cesped-suave);border-left:3px solid var(--cesped)"></i>Voluntario</span>
+    <span><i style="background:var(--azul-suave);border-left:3px solid var(--azul)"></i>CEAN</span>
+    <span><i style="background:var(--ambar-suave);border:1px dashed var(--ambar-osc)"></i>Sin asignar</span>
+    <span><i style="background:repeating-linear-gradient(-45deg,var(--rosa-suave) 0 3px,#fff 3px 6px);border:1px dashed #E3A69D"></i>Abierto sin personal</span>
+    <span><i style="background:#F3F3F1;border-left:3px solid var(--tinta-2)"></i>Actividad reservada</span>
+    <span><i style="background:repeating-linear-gradient(-45deg,#fff 0 3px,#E4E4E0 3px 6px)"></i>No obligatorio</span>
+    <span class="ayuda" id="ayuda">Doble clic en un turno para asignarlo</span>
+  </div>
+
+  <div class="tabla-scroll">
+    <div class="rejilla" id="rejilla"></div>
+  </div>
+
+  <div class="bloques">
+    <section class="bloque">
+      <h2>Pedido a CEAN <small id="pedido-sub"></small></h2>
+      <div id="pedido"></div>
+      <div class="acciones-pedido">
+        <button class="btn sec" id="copiar">Copiar para enviar</button>
+      </div>
+    </section>
+    <section class="bloque">
+      <h2>Avisos de la semana</h2>
+      <ul class="alertas" id="alertas"></ul>
+    </section>
+  </div>
+</main>
+
+<div class="velo" id="velo" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+  <div class="modal">
+    <div class="modal-cab">
+      <button class="cerrar" id="modal-cerrar" aria-label="Cerrar">×</button>
+      <h3 id="modal-titulo">—</h3>
+      <p id="modal-sub"></p>
+    </div>
+    <div class="modal-cuerpo" id="modal-cuerpo"></div>
+  </div>
+</div>
+
+<div class="cargando" id="cargando"><div id="cargando-txt">Calculando la semana…</div></div>
+
+<datalist id="lista-voluntarios"></datalist>
+
+<script>
+/* ============================================================
+   CONFIGURACIÓN · la misma URL /exec que en index.html
+   ============================================================ */
+const API_URL = "https://script.google.com/macros/s/AKfycbxM1mnhPAbTloJhNsGDR5LlNIiISF-61rJTeSkx9AeaKE8TmA5g9LKSHZs_BsviakiW/exec";
+
+const PX_MIN = 1;   // alto de la rejilla: 1 píxel por minuto
+
+/* ============================================================ */
+const $ = s => document.querySelector(s);
+const esc = t => String(t == null ? "" : t).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const hhmm = m => `${String(Math.floor(m/60)).padStart(2,"0")}:${String(m%60).padStart(2,"0")}`;
+const dur = m => { const h = Math.floor(m/60), r = m%60; return r ? `${h} h ${r} min` : `${h} h`; };
+const deTexto = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const aTexto = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const lunesDe = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; };
+const sumaDias = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const fmtCorto = d => `${d.getDate()} ${MESES[d.getMonth()]}`;
+const tactil = window.matchMedia("(hover: none)").matches;
+
+function unir(ints) {
+  const s = ints.filter(i => i[1] > i[0]).map(i => [i[0], i[1]]).sort((a,b) => a[0]-b[0]);
+  const out = [];
+  s.forEach(i => { const u = out[out.length-1]; if (u && i[0] <= u[1]) u[1] = Math.max(u[1], i[1]); else out.push(i); });
+  return out;
+}
+function restar(ints, quitar) {
+  let res = unir(ints);
+  unir(quitar).forEach(q => {
+    const n = [];
+    res.forEach(i => {
+      if (q[1] <= i[0] || q[0] >= i[1]) { n.push(i); return; }
+      if (q[0] > i[0]) n.push([i[0], q[0]]);
+      if (q[1] < i[1]) n.push([q[1], i[1]]);
+    });
+    res = n;
+  });
+  return res;
+}
+
+let pin = sessionStorage.getItem("turnosPin") || "";
+let lunes = lunesDe(new Date());
+let datos = null;
+
+async function api(payload) {
+  const r = await fetch(API_URL, { method:"POST", body: JSON.stringify(Object.assign({ pin }, payload)), redirect:"follow" });
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return await r.json();
+}
+
+function cargando(on, txt) {
+  $("#cargando-txt").textContent = txt || "Calculando la semana…";
+  $("#cargando").classList.toggle("on", on);
+}
+
+/* ---------- modal ---------- */
+const velo = $("#velo");
+function abrirModal(titulo, sub, html) {
+  $("#modal-titulo").textContent = titulo;
+  $("#modal-sub").textContent = sub || "";
+  $("#modal-cuerpo").innerHTML = html;
+  velo.classList.add("abierto");
+}
+function cerrarModal() { if (!pin) return; velo.classList.remove("abierto"); }
+function fallo(txt) { const e = $("#err"); if (e) { e.textContent = txt; e.classList.add("visible"); } }
+$("#modal-cerrar").addEventListener("click", cerrarModal);
+velo.addEventListener("click", e => { if (e.target === velo) cerrarModal(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarModal(); });
+
+/* ---------- acceso ---------- */
+function pedirPin(msg) {
+  pin = ""; sessionStorage.removeItem("turnosPin");
+  $("#app").hidden = true; $("#salir").hidden = true;
+  $("#modal-cerrar").hidden = true;
+  abrirModal("Acceso a turnos", "Introduce el PIN de gestión de turnos.", `
+    <label for="pin">PIN</label>
+    <input id="pin" class="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="off">
+    <p class="error" id="err"></p>
+    <button class="btn" id="entrar">Entrar</button>`);
+  if (msg) fallo(msg);
+  const campo = $("#pin"); campo.focus();
+  const entrar = async () => {
+    const v = campo.value.trim(); if (!v) return;
+    const b = $("#entrar"); b.disabled = true; b.textContent = "Comprobando…";
+    pin = v;
+    let r;
+    try { r = await api({ accion:"turnos_entrar" }); }
+    catch (e) { r = { error:"No he podido contactar con el servidor." }; }
+    if (r.error) { pin = ""; fallo(r.error); b.disabled = false; b.textContent = "Entrar"; campo.select(); return; }
+    sessionStorage.setItem("turnosPin", pin);
+    $("#modal-cerrar").hidden = false;
+    velo.classList.remove("abierto");
+    arrancar();
+  };
+  $("#entrar").addEventListener("click", entrar);
+  campo.addEventListener("keydown", e => { if (e.key === "Enter") entrar(); });
+}
+
+$("#salir").addEventListener("click", () => pedirPin());
+
+function arrancar() {
+  $("#app").hidden = false; $("#salir").hidden = false;
+  $("#ayuda").textContent = tactil ? "Toca un turno para asignarlo" : "Doble clic en un turno para asignarlo";
+  cargar();
+}
+
+/* ---------- carga ---------- */
+async function cargar(payload, txt) {
+  cargando(true, txt);
+  let r;
+  try { r = await api(payload || { accion:"turnos_leer", semana: aTexto(lunes) }); }
+  catch (e) { r = { error:"No he podido contactar con el servidor. Revisa la conexión y recarga." }; }
+  cargando(false);
+  if (r.error) {
+    if (/PIN|intentos/i.test(r.error)) return pedirPin(r.error);
+    alert(r.error);
+    return;
+  }
+  datos = r;
+  lunes = deTexto(r.semana);
+  pintar();
+}
+
+/* ---------- pintar ---------- */
+function claseTurno(t) {
+  if (!t.asignado) return "pend";
+  return t.asignado === datos.proveedor ? "cean" : "vol";
+}
+
+function pintar() {
+  const fin = sumaDias(lunes, 6);
+  $("#rango").textContent = `${fmtCorto(lunes)} – ${fmtCorto(fin)} ${fin.getFullYear()}`;
+  $("#actualizado").textContent = "Actualizado a las " + hhmm(new Date().getHours()*60 + new Date().getMinutes());
+  $("#lista-voluntarios").innerHTML = datos.voluntarios.map(v => `<option value="${esc(v)}">`).join("");
+
+  // Rango horario visible: al menos 9–23, más lo que asome por márgenes
+  let ini = 9*60, finM = 23*60;
+  datos.turnos.forEach(t => { ini = Math.min(ini, t.ini); finM = Math.max(finM, t.fin); });
+  datos.dias.forEach(d => d.actividades.forEach(a => { ini = Math.min(ini, a.ini); finM = Math.max(finM, a.fin); }));
+  ini = Math.floor(ini/30)*30; finM = Math.ceil(finM/30)*30;
+  const alto = (finM - ini) * PX_MIN;
+  const y = m => (m - ini) * PX_MIN;
+
+  const hoy = aTexto(new Date());
+  let html = `<div class="cab hora"></div>`;
+
+  datos.dias.forEach(d => {
+    const f = deTexto(d.fecha);
+    const delDia = datos.turnos.filter(t => t.fecha === d.fecha);
+    const min = delDia.reduce((a,t) => a + t.fin - t.ini, 0);
+    const avisos = (delDia.find(t => t.alertas) || {}).alertas || "";
+    const aviso = avisos && /(Supera|sin personal|Más de 9|sin descanso)/i.test(avisos)
+      ? `<span class="aviso-dia" title="${esc(avisos)}">⚠ aviso</span>` : "";
+    const modo = d.finde ? `<div class="modo" data-fecha="${d.fecha}">
+        <button data-modo="ajustada" class="${d.modo === "ajustada" ? "on" : ""}" title="Jornada de ${dur(d.objetivo)} ajustada a los partidos">Ajustada</button>
+        <button data-modo="completa" class="${d.modo === "completa" ? "on" : ""}" title="Cubrir todo el horario obligatorio">Completa</button>
+      </div>` : "";
+    html += `<div class="cab${d.fecha === hoy ? " hoy" : ""}">
+      <b>${d.nombre}</b><span>${fmtCorto(f)} · ${min ? dur(min) + " de turnos" : "sin turnos"}</span>
+      ${modo}${aviso}</div>`;
+  });
+
+  // Columna de horas
+  html += `<div class="col-horas" style="height:${alto}px">`;
+  for (let m = Math.ceil(ini/60)*60; m <= finM; m += 60) if (m > ini) html += `<span style="top:${y(m)}px">${hhmm(m)}</span>`;
+  html += `</div>`;
+
+  const ahora = new Date(), minAhora = ahora.getHours()*60 + ahora.getMinutes();
+
+  datos.dias.forEach(d => {
+    const delDia = datos.turnos.filter(t => t.fecha === d.fecha);
+    let col = `<div class="dia" style="height:${alto}px">`;
+    d.obligatorio.forEach(o => col += `<div class="obl" style="top:${y(o[0])}px;height:${(o[1]-o[0])*PX_MIN}px"></div>`);
+    for (let m = Math.ceil(ini/60)*60; m < finM; m += 60) if (m > ini) col += `<div class="linea-hora" style="top:${y(m)}px"></div>`;
+
+    // Abierto sin personal: horario obligatorio que ningún turno cubre
+    restar(d.obligatorio, delDia.map(t => [t.ini, t.fin])).forEach(h => {
+      const a = (h[1]-h[0])*PX_MIN;
+      col += `<div class="sinp" style="top:${y(h[0])}px;height:${a}px">${a >= 28 ? "Sin personal " + hhmm(h[0]) + "–" + hhmm(h[1]) : ""}</div>`;
+    });
+
+    // Actividades, repartidas en columnas si se solapan (campo y sala a la vez)
+    const acts = d.actividades.slice().sort((a,b) => a.ini - b.ini);
+    const carriles = [];
+    acts.forEach(a => {
+      let c = carriles.findIndex(finC => finC <= a.ini);
+      if (c < 0) { c = carriles.length; carriles.push(0); }
+      carriles[c] = a.fin; a.c = c;
+    });
+    const n = Math.max(carriles.length, 1);
+    acts.forEach(a => {
+      const w = `calc((32% - 5px) / ${n})`;
+      col += `<div class="act ${a.espacio === "sala" ? "sala" : ""}" style="top:${y(a.ini)}px;height:${(a.fin-a.ini)*PX_MIN - 1}px;width:${w};left:calc(3px + ${w} * ${a.c})"
+        title="${esc(a.entidad)} · ${esc(a.espacio)} · ${hhmm(a.ini)}–${hhmm(a.fin)}"><b>${esc(a.entidad)}</b>${esc(a.espacio)}</div>`;
+    });
+
+    // Turnos
+    delDia.forEach(t => {
+      const a = (t.fin - t.ini) * PX_MIN - 2;
+      const quien = t.asignado || "Sin asignar";
+      const tarea = t.tarea ? `<span class="tarea">${esc(t.tarea)}</span>` : "";
+      col += `<div class="t ${claseTurno(t)}" tabindex="0" data-id="${esc(t.id)}"
+        style="top:${y(t.ini)+1}px;height:${a}px"
+        title="${esc(t.turno)} · ${hhmm(t.ini)}–${hhmm(t.fin)}${t.notas ? " · " + esc(t.notas) : ""}">
+        ${t.notas ? `<span class="nota">✎</span>` : ""}
+        <b>${esc(quien)}</b>
+        <span>${hhmm(t.ini)}–${hhmm(t.fin)}</span>
+        ${a > 50 ? tarea : ""}
+        ${a > 68 ? `<span>${esc(t.turno.replace(/ · (ajustada|completa)$/, ""))}</span>` : ""}
+      </div>`;
+    });
+
+    if (d.fecha === hoy && minAhora > ini && minAhora < finM) col += `<div class="ahora" style="top:${y(minAhora)}px"></div>`;
+    col += `</div>`;
+    html += col;
+  });
+
+  $("#rejilla").innerHTML = html;
+  pintarCifras();
+  pintarPedido();
+  pintarAlertas();
+}
+
+function pintarCifras() {
+  const P = datos.proveedor;
+  const cean = datos.turnos.filter(t => t.asignado === P).reduce((a,t) => a + t.fin - t.ini, 0);
+  const pend = datos.turnos.filter(t => !t.asignado);
+  const minPend = pend.reduce((a,t) => a + t.fin - t.ini, 0);
+  const deVol = datos.turnos.filter(t => t.tipo !== P);
+  const cubVol = deVol.filter(t => t.asignado && t.asignado !== P);
+  const sinP = datos.dias.reduce((a,d) => a + restar(d.obligatorio,
+    datos.turnos.filter(t => t.fecha === d.fecha).map(t => [t.ini, t.fin])).reduce((s,h) => s + h[1]-h[0], 0), 0);
+
+  $("#cifras").innerHTML = `
+    <div class="cifra cean"><b>${dur(cean)}</b><span>de CEAN esta semana</span>
+      <em>${minPend ? `Si no se cubren los pendientes: ${dur(cean + minPend)}` : "Todos los turnos tienen a alguien"}</em></div>
+    <div class="cifra vol"><b>${cubVol.length} de ${deVol.length}</b><span>turnos cubiertos por voluntarios</span></div>
+    <div class="cifra pend"><b>${pend.length}</b><span>turnos sin asignar</span>${minPend ? `<em>${dur(minPend)}</em>` : ""}</div>
+    <div class="cifra sin"><b>${dur(sinP)}</b><span>de horario obligatorio sin personal</span></div>`;
+}
+
+function lineasPedido() {
+  const P = datos.proveedor;
+  const confirmadas = datos.turnos.filter(t => t.asignado === P);
+  const pendientes = datos.turnos.filter(t => !t.asignado);
+  return { confirmadas, pendientes };
+}
+
+function nombreDia(fecha) {
+  const d = datos.dias.find(x => x.fecha === fecha);
+  return `${d ? d.nombre : ""} ${fmtCorto(deTexto(fecha))}`;
+}
+
+function pintarPedido() {
+  const { confirmadas, pendientes } = lineasPedido();
+  const total = confirmadas.reduce((a,t) => a + t.fin - t.ini, 0);
+  const totalPend = pendientes.reduce((a,t) => a + t.fin - t.ini, 0);
+  $("#pedido-sub").textContent = `${fmtCorto(lunes)} – ${fmtCorto(sumaDias(lunes,6))}`;
+  if (!confirmadas.length && !pendientes.length) {
+    $("#pedido").innerHTML = `<p class="vacio">Esta semana no hacen falta horas de CEAN.</p>`;
+    return;
+  }
+  const fila = (t, prev) => `<tr class="${prev ? "prev" : ""}"><td style="text-transform:capitalize">${esc(nombreDia(t.fecha))}</td>
+    <td>${hhmm(t.ini)}–${hhmm(t.fin)}</td><td>${esc(t.tarea || "")}</td><td class="num">${dur(t.fin - t.ini)}</td></tr>`;
+  $("#pedido").innerHTML = `<table class="pedido">
+    <thead><tr><th>Día</th><th>Horario</th><th>Tarea</th><th class="num">Horas</th></tr></thead>
+    <tbody>${confirmadas.map(t => fila(t, false)).join("")}
+    ${pendientes.length ? `<tr><td colspan="4" style="padding-top:1rem;font-size:.78rem;color:var(--tinta-3);border-bottom:0">Pendientes: pasarán a CEAN si nadie se apunta</td></tr>` + pendientes.map(t => fila(t, true)).join("") : ""}
+    </tbody>
+    <tfoot><tr><td colspan="3">Total CEAN</td><td class="num">${dur(total)}</td></tr>
+    ${totalPend ? `<tr class="prev"><td colspan="3" style="font-weight:500">Con los pendientes</td><td class="num">${dur(total + totalPend)}</td></tr>` : ""}</tfoot>
+  </table>`;
+}
+
+function pintarAlertas() {
+  const lis = [];
+  datos.dias.forEach(d => {
+    const t = datos.turnos.find(x => x.fecha === d.fecha && x.alertas);
+    if (t) t.alertas.split(" · ").forEach(a => lis.push(`<li><b>${d.nombre}</b>${esc(a)}</li>`));
+  });
+  const pend = datos.turnos.filter(t => !t.asignado && t.tipo !== datos.proveedor);
+  if (pend.length) lis.unshift(`<li><b>Voluntariado</b>${pend.length} turno${pend.length > 1 ? "s" : ""} sin voluntario. A 72 h del inicio pasan solos a CEAN.</li>`);
+  $("#alertas").innerHTML = lis.length ? lis.join("") : `<li class="vacio">Sin avisos esta semana.</li>`;
+}
+
+/* ---------- asignar ---------- */
+function abrirTurno(id) {
+  const t = datos.turnos.find(x => x.id === id); if (!t) return;
+  const P = datos.proveedor;
+  abrirModal(`${t.turno.replace(/ · (ajustada|completa)$/, "")}`,
+    `${nombreDia(t.fecha)} · ${hhmm(t.ini)}–${hhmm(t.fin)} (${dur(t.fin - t.ini)})${t.tarea ? " · " + t.tarea : ""}`, `
+    <label for="quien">¿Quién lo hace?</label>
+    <input id="quien" list="lista-voluntarios" autocomplete="off" value="${esc(t.asignado)}" placeholder="Nombre del voluntario">
+    <div class="rapidos">
+      <button type="button" class="cean" data-v="${esc(P)}">${esc(P)}</button>
+      <button type="button" data-v="">Dejar sin asignar</button>
+    </div>
+    <label for="notas">Notas</label>
+    <input id="notas" autocomplete="off" value="${esc(t.notas)}" placeholder="Relevo, llaves, incidencias…">
+    <p class="error" id="err"></p>
+    <button class="btn" id="guardar">Guardar</button>`);
+  const quien = $("#quien");
+  quien.focus(); quien.select();
+  document.querySelectorAll(".rapidos button").forEach(b => b.addEventListener("click", () => { quien.value = b.dataset.v; guardar(); }));
+  const guardar = async () => {
+    const btn = $("#guardar"); btn.disabled = true; btn.textContent = "Guardando…";
+    let r;
+    try { r = await api({ accion:"turnos_asignar", semana: aTexto(lunes), id: t.id, asignado: quien.value.trim(), notas: $("#notas").value.trim() }); }
+    catch (e) { r = { error:"No he podido guardar. Revisa la conexión." }; }
+    if (r.error) {
+      if (/PIN|intentos/i.test(r.error)) return pedirPin(r.error);
+      fallo(r.error); btn.disabled = false; btn.textContent = "Guardar"; return;
+    }
+    datos = r; cerrarModal(); pintar();
+  };
+  $("#guardar").addEventListener("click", guardar);
+  [quien, $("#notas")].forEach(i => i.addEventListener("keydown", e => { if (e.key === "Enter") guardar(); }));
+}
+
+const rejilla = $("#rejilla");
+rejilla.addEventListener(tactil ? "click" : "dblclick", e => {
+  const t = e.target.closest(".t"); if (t) abrirTurno(t.dataset.id);
+});
+rejilla.addEventListener("keydown", e => {
+  const t = e.target.closest(".t"); if (t && e.key === "Enter") abrirTurno(t.dataset.id);
+});
+rejilla.addEventListener("click", e => {
+  const b = e.target.closest(".modo button"); if (!b || b.classList.contains("on")) return;
+  const fecha = b.parentElement.dataset.fecha;
+  cargar({ accion:"turnos_modo", semana: aTexto(lunes), fecha, modo: b.dataset.modo }, "Recalculando el fin de semana…");
+});
+
+/* ---------- pedido ---------- */
+$("#copiar").addEventListener("click", async () => {
+  const { confirmadas } = lineasPedido();
+  const total = confirmadas.reduce((a,t) => a + t.fin - t.ini, 0);
+  const txt = [`Campo Antonio Martín · horas de gestión de instalación`,
+    `Semana del ${fmtCorto(lunes)} al ${fmtCorto(sumaDias(lunes,6))} de ${sumaDias(lunes,6).getFullYear()}`, "",
+    ...confirmadas.map(t => `${nombreDia(t.fecha)}: ${hhmm(t.ini)} a ${hhmm(t.fin)} (${dur(t.fin - t.ini)})${t.tarea ? ", " + t.tarea.toLowerCase() : ""}`),
+    "", `Total: ${dur(total)}`].join("\n");
+  const b = $("#copiar");
+  try { await navigator.clipboard.writeText(txt); b.textContent = "Copiado"; }
+  catch (e) { prompt("Copia el texto:", txt); }
+  setTimeout(() => b.textContent = "Copiar para enviar", 1800);
+});
+
+/* ---------- navegación ---------- */
+$("#sem-prev").addEventListener("click", () => { lunes = sumaDias(lunes, -7); cargar(); });
+$("#sem-next").addEventListener("click", () => { lunes = sumaDias(lunes, 7); cargar(); });
+$("#sem-hoy").addEventListener("click", () => { lunes = lunesDe(new Date()); cargar(); });
+
+if (pin) arrancar(); else pedirPin();
+</script>
+</body>
+</html>
