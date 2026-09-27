@@ -54,6 +54,7 @@ main{padding:1.6rem 0 4rem}
 .cifra:last-child{border-right:0}
 .cifra b{display:block;font-family:var(--p);font-weight:600;font-size:1.9rem;line-height:1.05;letter-spacing:-.03em}
 .cifra span{font-size:.84rem;color:var(--tinta-2)}
+.cifra span strong{font-family:var(--p);font-weight:600;color:var(--azul-osc)}
 .cifra em{display:block;font-style:normal;font-size:.8rem;color:var(--tinta-3);margin-top:.3rem}
 .cifra.cean{background:var(--azul-suave);border-left:5px solid var(--azul)}
 .cifra.cean b{font-size:2.6rem;color:var(--azul-osc)}
@@ -255,6 +256,7 @@ input:focus{outline:none;border-color:var(--cesped);box-shadow:0 0 0 3px rgba(69
 const API_URL = "https://script.google.com/macros/s/AKfycbxM1mnhPAbTloJhNsGDR5LlNIiISF-61rJTeSkx9AeaKE8TmA5g9LKSHZs_BsviakiW/exec";
 
 const PX_MIN = 1;   // alto de la rejilla: 1 píxel por minuto
+const PRECIO_HORA_CEAN = 10;   // euros por hora de CEAN
 
 /* ============================================================ */
 const $ = s => document.querySelector(s);
@@ -266,6 +268,7 @@ const deTexto = s => { const [y,m,d] = s.split("-").map(Number); return new Date
 const aTexto = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 const lunesDe = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; };
 const sumaDias = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const euros = m => (m / 60 * PRECIO_HORA_CEAN).toLocaleString("es-ES", { minimumFractionDigits:2, maximumFractionDigits:2 }) + " €";
 const fmtCorto = d => `${d.getDate()} ${MESES[d.getMonth()]}`;
 const tactil = window.matchMedia("(hover: none)").matches;
 
@@ -483,8 +486,8 @@ function pintarCifras() {
     datos.turnos.filter(t => t.fecha === d.fecha).map(t => [t.ini, t.fin])).reduce((s,h) => s + h[1]-h[0], 0), 0);
 
   $("#cifras").innerHTML = `
-    <div class="cifra cean"><b>${dur(cean)}</b><span>de CEAN esta semana</span>
-      <em>${minPend ? `Si no se cubren los pendientes: ${dur(cean + minPend)}` : "Todos los turnos tienen a alguien"}</em></div>
+    <div class="cifra cean"><b>${dur(cean)}</b><span>de CEAN esta semana · <strong>${euros(cean)}</strong></span>
+      <em>${minPend ? `Si no se cubren los pendientes: ${dur(cean + minPend)} · ${euros(cean + minPend)}` : "Todos los turnos tienen a alguien"}</em></div>
     <div class="cifra vol"><b>${cubVol.length} de ${deVol.length}</b><span>turnos cubiertos por voluntarios</span></div>
     <div class="cifra pend"><b>${pend.length}</b><span>turnos sin asignar</span>${minPend ? `<em>${dur(minPend)}</em>` : ""}</div>
     <div class="cifra sin"><b>${dur(sinP)}</b><span>de horario obligatorio sin personal</span></div>`;
@@ -512,14 +515,14 @@ function pintarPedido() {
     return;
   }
   const fila = (t, prev) => `<tr class="${prev ? "prev" : ""}"><td style="text-transform:capitalize">${esc(nombreDia(t.fecha))}</td>
-    <td>${hhmm(t.ini)}–${hhmm(t.fin)}</td><td>${esc(t.tarea || "")}</td><td class="num">${dur(t.fin - t.ini)}</td></tr>`;
+    <td>${hhmm(t.ini)}–${hhmm(t.fin)}</td><td>${esc(t.tarea || "")}</td><td class="num">${dur(t.fin - t.ini)}</td><td class="num">${euros(t.fin - t.ini)}</td></tr>`;
   $("#pedido").innerHTML = `<table class="pedido">
-    <thead><tr><th>Día</th><th>Horario</th><th>Tarea</th><th class="num">Horas</th></tr></thead>
+    <thead><tr><th>Día</th><th>Horario</th><th>Tarea</th><th class="num">Horas</th><th class="num">Coste</th></tr></thead>
     <tbody>${confirmadas.map(t => fila(t, false)).join("")}
-    ${pendientes.length ? `<tr><td colspan="4" style="padding-top:1rem;font-size:.78rem;color:var(--tinta-3);border-bottom:0">Pendientes: pasarán a CEAN si nadie se apunta</td></tr>` + pendientes.map(t => fila(t, true)).join("") : ""}
+    ${pendientes.length ? `<tr><td colspan="5" style="padding-top:1rem;font-size:.78rem;color:var(--tinta-3);border-bottom:0">Pendientes: pasarán a CEAN si nadie se apunta</td></tr>` + pendientes.map(t => fila(t, true)).join("") : ""}
     </tbody>
-    <tfoot><tr><td colspan="3">Total CEAN</td><td class="num">${dur(total)}</td></tr>
-    ${totalPend ? `<tr class="prev"><td colspan="3" style="font-weight:500">Con los pendientes</td><td class="num">${dur(total + totalPend)}</td></tr>` : ""}</tfoot>
+    <tfoot><tr><td colspan="3">Total CEAN</td><td class="num">${dur(total)}</td><td class="num">${euros(total)}</td></tr>
+    ${totalPend ? `<tr class="prev"><td colspan="3" style="font-weight:500">Con los pendientes</td><td class="num">${dur(total + totalPend)}</td><td class="num">${euros(total + totalPend)}</td></tr>` : ""}</tfoot>
   </table>`;
 }
 
@@ -588,7 +591,7 @@ $("#copiar").addEventListener("click", async () => {
   const txt = [`Campo Antonio Martín · horas de gestión de instalación`,
     `Semana del ${fmtCorto(lunes)} al ${fmtCorto(sumaDias(lunes,6))} de ${sumaDias(lunes,6).getFullYear()}`, "",
     ...confirmadas.map(t => `${nombreDia(t.fecha)}: ${hhmm(t.ini)} a ${hhmm(t.fin)} (${dur(t.fin - t.ini)})${t.tarea ? ", " + t.tarea.toLowerCase() : ""}`),
-    "", `Total: ${dur(total)}`].join("\n");
+    "", `Total: ${dur(total)} · ${euros(total)} (${PRECIO_HORA_CEAN} €/h)`].join("\n");
   const b = $("#copiar");
   try { await navigator.clipboard.writeText(txt); b.textContent = "Copiado"; }
   catch (e) { prompt("Copia el texto:", txt); }
