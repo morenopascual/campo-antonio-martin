@@ -1,0 +1,369 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Agenda del club · TRC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta:#3A3A3C; --tinta2:#6C6C6E; --tinta3:#9B9B9C; --linea:#E6E6E1;
+  --oro:#DFA83C; --oro-osc:#B8862A; --oro-suave:#FBEFD6;
+  --gris:#8E8E88; --gris-suave:#F2F2EE; --cesped:#45803A; --hueso:#FAFAF8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;color:var(--tinta);font-family:"Roboto",Arial,sans-serif;font-size:16px;
+  padding-top:env(safe-area-inset-top,0);padding-bottom:calc(env(safe-area-inset-bottom,0) + 40px)}
+.wrap{width:min(860px,94vw);margin:0 auto}
+
+header{padding:26px 0 14px;border-bottom:2px solid var(--tinta)}
+h1{font-family:"Poppins",sans-serif;font-weight:600;font-size:1.6rem;letter-spacing:-.02em}
+header p{color:var(--tinta3);font-size:.82rem;margin-top:2px}
+
+h2.dia{font-family:"Poppins",sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:-.01em;
+  margin:26px 0 12px;color:var(--tinta2)}
+
+.tarjeta{display:flex;border:1px solid var(--linea);border-left:6px solid var(--oro);
+  margin-bottom:12px;background:#fff}
+.tarjeta.fuera{border-left-color:var(--gris)}
+.cuerpo{flex:1;padding:14px 16px;min-width:0}
+
+.cab{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.cat{font-family:"Poppins",sans-serif;font-weight:700;font-size:1.02rem;letter-spacing:-.01em}
+.et{font-size:.6rem;font-weight:700;letter-spacing:.14em;padding:2px 7px;border-radius:2px}
+.et.casa{background:var(--oro-suave);color:#8A6516}
+.et.fuera{background:var(--gris-suave);color:#6C6C6E}
+.comp{font-size:.72rem;color:var(--tinta3);margin-left:auto}
+
+.vs{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.escudo{width:34px;height:34px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  font-family:"Poppins",sans-serif;font-weight:700;font-size:.66rem;color:#fff;letter-spacing:-.02em}
+.equipos{font-family:"Poppins",sans-serif;font-weight:500;font-size:.95rem;line-height:1.25}
+.equipos b{font-weight:700}
+
+.datos{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px 14px;
+  border-top:1px solid var(--linea);padding-top:10px;font-size:.86rem}
+.dato span{display:block;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta3);margin-bottom:1px}
+.dato b{font-family:"Poppins",sans-serif;font-weight:600}
+.dato.destaca b{color:var(--oro-osc);font-size:1.05rem}
+.dato a{color:var(--cesped);text-decoration:none;border-bottom:1px solid #C3DBBE}
+
+.acciones{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+button{font-family:"Roboto",sans-serif;font-size:.7rem;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;padding:.6rem 1rem;border:1px solid var(--tinta);background:#fff;
+  color:var(--tinta);cursor:pointer;border-radius:2px}
+button:hover{background:var(--tinta);color:#fff}
+button.p{background:var(--cesped);border-color:var(--cesped);color:#fff}
+button.p:hover{background:#2F5E28}
+button.ok{background:var(--cesped);border-color:var(--cesped);color:#fff}
+
+.previa{margin-top:10px;display:none}
+.previa.on{display:block}
+.previa canvas{width:190px;height:190px;border:1px solid var(--linea);border-radius:3px}
+.previa p{font-size:.68rem;color:var(--tinta3);margin-top:5px}
+
+.nota{font-size:.75rem;color:var(--tinta3);margin:22px 0 0;line-height:1.6;
+  border-top:1px solid var(--linea);padding-top:14px}
+.nota b{color:var(--tinta2)}
+@media (max-width:560px){ .comp{margin-left:0;width:100%} }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Agenda del club</h1>
+    <p id="rango"></p>
+  </header>
+  <main id="lista"></main>
+  <p class="nota">
+    <b>Convocatoria</b>: hora de llegada del equipo, 60 minutos antes del inicio salvo que se indique otra cosa.
+    <b>Inicio</b>: hora oficial de la federación. En los desplazamientos se indica además la hora de salida del club.<br>
+    El botón <b>Compartir</b> abre WhatsApp con la imagen y el texto ya preparados; hay que elegir el grupo y enviar.
+    Desde ordenador, usa <b>Copiar texto</b> y <b>Descargar imagen</b>.
+  </p>
+</div>
+
+<script>
+/* ============================================================
+   DATOS DEL FIN DE SEMANA
+   El kick-off es el único horario que se introduce: la convocatoria
+   y la reserva de campo se calculan a partir de él.
+   ============================================================ */
+const CONFIG = {
+  club: "Torrelodones Rugby Club",
+  url:  "campoantoniomartin.com/finde",      // programación completa del campo
+  convocatoria: { "Sub 14":45, "Sub 16":60, "Sub 18":60, "Sub 17 Fem.":60,
+                  "Femenino 1ª":75, "Masculino 1ª":75, "Masculino 3ª":75 },
+  campos: {
+    "Campo Antonio Martín": { ciudad:"Torrelodones", mapa:"https://maps.app.goo.gl/1yAVSSsiVxuQuYum9", viaje:0 },
+    "Julián Ariza":         { ciudad:"Torrelodones", mapa:"", viaje:0 },
+    "Tres Olivos":          { ciudad:"Madrid", mapa:"", viaje:35 },
+    "Ramón Urtubi":         { ciudad:"Madrid", mapa:"", viaje:40 },
+    "Getafe":               { ciudad:"Getafe", mapa:"", viaje:50 },
+    "Arbolitos":            { ciudad:"Madrid", mapa:"", viaje:45 }
+  }
+};
+
+const PARTIDOS = [
+  { cat:"Sub 18", casa:true, local:"Torrelodones RC", visitante:"Aproperties Alcobendas Blanco",
+    comp:"Jornada 2 · 2ª Regional Grupo A", fecha:"2026-10-17", ko:"13:00", campo:"Campo Antonio Martín", estado:"confirmado" },
+  { cat:"Sub 14", casa:false, local:"Osos del Pardo", visitante:"Torrelodones-Majadahonda",
+    comp:"Jornada 1 · 3ª División Grupo B", fecha:"2026-10-17", ko:"14:00", campo:"Tres Olivos", estado:"confirmado" },
+  { cat:"Masculino 3ª", casa:true, local:"Torrelodones-Arquitectura", visitante:"Industriales Villalba",
+    comp:"Jornada 1 · 3ª Regional Grupo B", fecha:"2026-10-17", ko:"15:00", campo:"Campo Antonio Martín", estado:"confirmado" },
+  { cat:"Femenino 1ª", casa:true, local:"Torrelodones-Villalba", visitante:"Ahorramas Vallecas",
+    comp:"Jornada 2 · 1ª Regional", fecha:"2026-10-17", ko:"17:00", campo:"Julián Ariza", estado:"confirmado" },
+  { cat:"Sub 16", casa:true, local:"Torrelodones-Majadahonda", visitante:"Osos del Pardo",
+    comp:"Jornada 2 · 2ª División Grupo B", fecha:"2026-10-18", ko:"11:30", campo:"Campo Antonio Martín", estado:"confirmado" },
+  { cat:"Sub 17 Fem.", casa:false, local:"Liceo-Alcalá", visitante:"Torre-Indus-Villalba-Tasman-Osas",
+    comp:"Jornada 1 · 1ª Fase Grupo C", fecha:"2026-10-18", ko:"12:30", campo:"Ramón Urtubi", estado:"confirmado" },
+  { cat:"Jornada Sub 12", casa:false, jornada:true, local:"Jornada de la FRM", visitante:"",
+    comp:"10:00 a 13:30", fecha:"2026-10-17", ko:"10:00", campo:"Getafe", estado:"confirmado" },
+  { cat:"Jornada Touch", casa:false, jornada:true, local:"Jornada de la FRM", visitante:"",
+    comp:"10:00 a 15:00", fecha:"2026-10-18", ko:"10:00", campo:"Arbolitos", estado:"confirmado" }
+];
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const DIAS=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+const MESES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const min = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
+const hm  = m => `${Math.floor(((m%1440)+1440)%1440/60)}:${String(m%60).padStart(2,"0")}`;
+const esc = s => String(s==null?"":s).replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+const fechaLarga = f => { const d=new Date(f+"T12:00:00");
+  return `${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]}`; };
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+
+// Color estable por nombre de equipo, para el escudo provisional
+function colorDe(nombre){
+  let h=0; for(const c of nombre) h=(h*31+c.charCodeAt(0))%360;
+  return `hsl(${h} 42% 42%)`;
+}
+function siglas(nombre){
+  return nombre.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ\s-]/g,"").split(/[\s-]+/)
+    .filter(Boolean).slice(0,2).map(p=>p[0].toUpperCase()).join("");
+}
+
+function horarios(p){
+  const ko = min(p.ko);
+  const cm = CONFIG.convocatoria[p.cat] ?? 60;
+  const campo = CONFIG.campos[p.campo] || { ciudad:"", mapa:"", viaje:0 };
+  return {
+    ko, convocatoria: ko-cm,
+    reserva: [ko-30, ko+90],
+    salida: p.casa ? null : ko-cm-campo.viaje,
+    campo
+  };
+}
+
+/* ============================================================
+   TEXTO PARA WHATSAPP
+   ============================================================ */
+function texto(p){
+  const h=horarios(p);
+  const L=[];
+  if(p.jornada){
+    L.push(`*${p.cat.toUpperCase()} · FUERA*`);
+    L.push(`🏉 ${p.local}`);
+    L.push(`_${p.comp}_`);
+  } else {
+    L.push(`*${p.cat.toUpperCase()} · ${p.casa?"EN CASA":"FUERA"}*`);
+    L.push(`🏉 ${p.local} – ${p.visitante}`);
+    L.push(`_${p.comp}_`);
+  }
+  L.push("");
+  L.push(`🗓 ${cap(fechaLarga(p.fecha))}`);
+  L.push(`🕐 *Convocatoria: ${hm(h.convocatoria)}*${p.jornada?"":` · Partido: ${p.ko}`}`);
+  L.push(`📍 ${p.campo}${h.campo.ciudad?`, ${h.campo.ciudad}`:""}`);
+  if(h.salida!=null) L.push(`🚗 Salida del club: ${hm(h.salida)}`);
+  if(h.campo.mapa) L.push(`🔗 ${h.campo.mapa}`);
+  L.push("");
+  L.push("📋 Programación del fin de semana:");
+  L.push(CONFIG.url);
+  return L.join("\n");
+}
+
+/* ============================================================
+   IMAGEN 1080×1080 PARA WHATSAPP
+   Fondos planos y tipografía gruesa: WhatsApp recomprime y el
+   texto fino se emborrona.
+   ============================================================ */
+function dibuja(canvas,p){
+  const S=1080, c=canvas.getContext("2d"), h=horarios(p);
+  canvas.width=S; canvas.height=S;
+  const ORO="#DFA83C", TINTA="#2E2E30", GRIS="#8E8E88";
+  const acento = p.casa ? ORO : GRIS;
+
+  c.fillStyle="#FFFFFF"; c.fillRect(0,0,S,S);
+  c.fillStyle=TINTA; c.fillRect(0,0,S,196);
+  c.fillStyle=acento; c.fillRect(0,196,S,14);
+
+  c.fillStyle=acento; c.font="700 34px Poppins, Arial";
+  c.fillText(p.casa?"EN CASA":"FUERA", 64, 84);
+  c.fillStyle="#FFFFFF"; c.font="700 70px Poppins, Arial";
+  c.fillText(p.cat.toUpperCase(), 64, 158);
+
+  // equipos
+  let y=300;
+  if(p.jornada){
+    c.fillStyle=TINTA; c.font="600 56px Poppins, Arial";
+    envuelve(c,p.local,64,y,S-128,66);
+    y+=120;
+  } else {
+    [[p.local,true],[p.visitante,false]].forEach(([nom,loc],i)=>{
+      const cy=y+i*112;
+      c.beginPath(); c.arc(112,cy,46,0,Math.PI*2);
+      c.fillStyle=nom.toLowerCase().includes("torrelodones")||nom.toLowerCase().startsWith("torre")?ORO:colorDe(nom);
+      c.fill();
+      c.fillStyle="#FFFFFF"; c.font="700 34px Poppins, Arial"; c.textAlign="center";
+      c.fillText(siglas(nom),112,cy+12); c.textAlign="left";
+      c.fillStyle=TINTA; c.font=(nom.toLowerCase().includes("torrelodones")||nom.toLowerCase().startsWith("torre")?"700 ":"500 ")+"44px Poppins, Arial";
+      envuelve(c,nom,184,cy+14,S-248,50);
+    });
+    y+=224;
+  }
+
+  c.fillStyle="#8A8A86"; c.font="400 30px Roboto, Arial";
+  c.fillText(p.comp, 64, y); y+=58;
+
+  c.strokeStyle="#E6E6E1"; c.lineWidth=2;
+  c.beginPath(); c.moveTo(64,y); c.lineTo(S-64,y); c.stroke(); y+=70;
+
+  const fila=(etiq,val,grande)=>{
+    c.fillStyle="#9B9B9C"; c.font="500 24px Roboto, Arial";
+    c.fillText(etiq.toUpperCase(), 64, y);
+    c.fillStyle=grande?"#B8862A":TINTA; c.font=`${grande?"700 54px":"600 42px"} Poppins, Arial`;
+    c.fillText(val, 64, y+(grande?60:52));
+    y += grande?118:100;
+  };
+  fila("Cuándo", cap(fechaLarga(p.fecha)));
+  fila("Convocatoria", hm(h.convocatoria) + (p.jornada?"":`   ·   Partido ${p.ko}`), true);
+  fila("Dónde", p.campo + (h.campo.ciudad?`, ${h.campo.ciudad}`:""));
+  if(h.salida!=null) fila("Salida del club", hm(h.salida));
+
+  c.fillStyle=TINTA; c.fillRect(0,S-108,S,108);
+  c.fillStyle="#FFFFFF"; c.font="600 30px Poppins, Arial";
+  c.fillText(CONFIG.club, 64, S-62);
+  c.fillStyle=ORO; c.font="400 26px Roboto, Arial";
+  c.fillText(CONFIG.url, 64, S-24);
+}
+
+function envuelve(c,txt,x,y,ancho,alto){
+  const pal=txt.split(" "); let linea="", yy=y;
+  for(const p of pal){
+    const t=linea?linea+" "+p:p;
+    if(c.measureText(t).width>ancho && linea){ c.fillText(linea,x,yy); linea=p; yy+=alto; }
+    else linea=t;
+  }
+  c.fillText(linea,x,yy);
+}
+
+/* ============================================================
+   INTERFAZ
+   ============================================================ */
+function tarjeta(p,i){
+  const h=horarios(p);
+  const mapa = h.campo.mapa
+    ? `<a href="${h.campo.mapa}" target="_blank" rel="noopener">${esc(p.campo)}</a>`
+    : esc(p.campo);
+  const esc1 = p.jornada ? "" :
+    `<span class="escudo" style="background:${p.local.toLowerCase().startsWith("torre")?"var(--oro)":colorDe(p.local)}">${siglas(p.local)}</span>`;
+  const esc2 = p.jornada ? "" :
+    `<span class="escudo" style="background:${p.visitante.toLowerCase().startsWith("torre")?"var(--oro)":colorDe(p.visitante)}">${siglas(p.visitante)}</span>`;
+  const nombres = p.jornada
+    ? `<div class="equipos">${esc(p.local)}</div>`
+    : `<div class="equipos">${p.casa?"<b>"+esc(p.local)+"</b>":esc(p.local)} – ${!p.casa?"<b>"+esc(p.visitante)+"</b>":esc(p.visitante)}</div>`;
+  return `
+  <article class="tarjeta ${p.casa?"":"fuera"}">
+    <div class="cuerpo">
+      <div class="cab">
+        <span class="cat">${esc(p.cat)}</span>
+        <span class="et ${p.casa?"casa":"fuera"}">${p.casa?"EN CASA":"FUERA"}</span>
+        <span class="comp">${esc(p.comp)}</span>
+      </div>
+      <div class="vs">${esc1}${esc2}${nombres}</div>
+      <div class="datos">
+        <div class="dato destaca"><span>Convocatoria</span><b>${hm(h.convocatoria)}</b></div>
+        ${p.jornada?"":`<div class="dato"><span>Inicio</span><b>${p.ko}</b></div>`}
+        <div class="dato"><span>Dónde</span><b>${mapa}</b></div>
+        ${h.salida!=null?`<div class="dato"><span>Salida del club</span><b>${hm(h.salida)}</b></div>`:""}
+        ${p.casa?`<div class="dato"><span>Campo reservado</span><b>${hm(h.reserva[0])}–${hm(h.reserva[1])}</b></div>`:""}
+      </div>
+      <div class="acciones">
+        <button class="p" data-ac="compartir" data-i="${i}">Compartir</button>
+        <button data-ac="texto" data-i="${i}">Copiar texto</button>
+        <button data-ac="imagen" data-i="${i}">Descargar imagen</button>
+        <button data-ac="ver" data-i="${i}">Ver imagen</button>
+      </div>
+      <div class="previa" id="previa-${i}"><canvas id="cv-${i}"></canvas><p>1080×1080, lista para WhatsApp</p></div>
+    </div>
+  </article>`;
+}
+
+function pinta(){
+  const porDia={};
+  PARTIDOS.forEach((p,i)=>{ (porDia[p.fecha] ||= []).push([p,i]); });
+  const fechas=Object.keys(porDia).sort();
+  document.getElementById("rango").textContent =
+    `${cap(fechaLarga(fechas[0]))} y ${fechaLarga(fechas[fechas.length-1])} de 2026 · ${PARTIDOS.length} compromisos`;
+  document.getElementById("lista").innerHTML = fechas.map(f=>{
+    const items=porDia[f].sort((a,b)=>min(a[0].ko)-min(b[0].ko));
+    return `<h2 class="dia">${cap(fechaLarga(f))}</h2>` + items.map(([p,i])=>tarjeta(p,i)).join("");
+  }).join("");
+}
+
+async function lienzo(i){
+  const cv=document.getElementById("cv-"+i);
+  if(!cv.dataset.listo){ await document.fonts.ready; dibuja(cv,PARTIDOS[i]); cv.dataset.listo="1"; }
+  return cv;
+}
+const blobDe = cv => new Promise(r=>cv.toBlob(r,"image/png"));
+function avisa(btn,txt){
+  const o=btn.textContent; btn.textContent=txt; btn.classList.add("ok");
+  setTimeout(()=>{btn.textContent=o;btn.classList.remove("ok")},1800);
+}
+
+document.addEventListener("click", async e=>{
+  const b=e.target.closest("button[data-ac]"); if(!b) return;
+  const i=+b.dataset.i, p=PARTIDOS[i];
+
+  if(b.dataset.ac==="ver"){
+    const caja=document.getElementById("previa-"+i);
+    await lienzo(i); caja.classList.toggle("on");
+    b.textContent = caja.classList.contains("on") ? "Ocultar imagen" : "Ver imagen"; return;
+  }
+
+  if(b.dataset.ac==="texto"){
+    try{ await navigator.clipboard.writeText(texto(p)); avisa(b,"Copiado"); }
+    catch(err){ window.prompt("Copia el texto:", texto(p)); }
+    return;
+  }
+
+  if(b.dataset.ac==="imagen"){
+    const cv=await lienzo(i);
+    const a=document.createElement("a");
+    a.download=`${p.cat.replace(/\s+/g,"-").toLowerCase()}-${p.fecha}.png`;
+    a.href=cv.toDataURL("image/png"); a.click(); avisa(b,"Descargada"); return;
+  }
+
+  if(b.dataset.ac==="compartir"){
+    const cv=await lienzo(i), t=texto(p);
+    try{
+      const blob=await blobDe(cv);
+      const file=new File([blob],"partido.png",{type:"image/png"});
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({ files:[file], text:t });
+        return;
+      }
+      // Sin compartir nativo: WhatsApp con el texto y la imagen descargada aparte
+      await navigator.clipboard.writeText(t).catch(()=>{});
+      const a=document.createElement("a");
+      a.download=`${p.cat.replace(/\s+/g,"-").toLowerCase()}-${p.fecha}.png`;
+      a.href=cv.toDataURL("image/png"); a.click();
+      window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank","noopener");
+    }catch(err){ if(err && err.name!=="AbortError") alert("No se ha podido compartir: "+err.message); }
+  }
+});
+
+pinta();
+</script>
