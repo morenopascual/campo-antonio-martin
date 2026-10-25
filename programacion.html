@@ -1,0 +1,437 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Programación del fin de semana · Campo Antonio Martín</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta:#3A3A3C;--tinta2:#6C6C6E;--tinta3:#9B9B9C;--linea:#E6E6E1;--hueso:#FAFAF8;
+  --oro:#DFA83C;--oro-osc:#B8862A;--azul:#4A6E8F;--morado:#6B63B8;--cesped:#45803A;--cesped-osc:#2F5E28;--rojo:#C0392B;
+  --alto:51px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;color:var(--tinta);font-family:"Roboto",Arial,sans-serif;font-size:16px;
+  padding:0 0 60px env(safe-area-inset-left,0)}
+.wrap{width:min(1080px,94vw);margin:0 auto}
+
+header{padding:26px 0 0}
+h1{font-family:"Poppins",sans-serif;font-weight:600;font-size:1.65rem;letter-spacing:-.02em}
+.sub{color:var(--tinta3);font-size:.84rem;margin-top:3px}
+.barra{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:1.1rem 0 .2rem;
+  border-top:2px solid var(--tinta);border-bottom:1px solid var(--linea);padding:.75rem 0}
+.barra b{font-family:"Poppins",sans-serif;font-weight:600;font-size:.95rem;min-width:11rem}
+button{font-family:"Roboto",sans-serif;font-size:.72rem;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;padding:.55rem 1rem;border:1px solid var(--tinta);background:#fff;
+  color:var(--tinta);cursor:pointer;border-radius:2px}
+button:hover{background:var(--tinta);color:#fff}
+button:disabled{opacity:.35;cursor:default}
+button.p{background:var(--cesped);border-color:var(--cesped);color:#fff}
+button.p:hover{background:var(--cesped-osc)}
+.sep{margin-left:auto}
+.pest{display:flex;gap:0;border-bottom:1px solid var(--linea);margin:1.4rem 0 1.5rem}
+.pest button{border:0;border-bottom:2px solid transparent;background:0;padding:.7rem 1.1rem;
+  font-size:.78rem;color:var(--tinta3)}
+.pest button:hover{background:0;color:var(--tinta)}
+.pest button.on{color:var(--tinta);border-bottom-color:var(--oro);font-weight:500}
+.panel{display:none}.panel.on{display:block}
+.aviso{background:#FBECEC;border-left:4px solid var(--rojo);color:#8C2F2F;padding:.85rem 1.1rem;
+  font-size:.86rem;margin-bottom:1.4rem}
+.cargando{color:var(--tinta3);font-size:.9rem;padding:2rem 0}
+
+/* ---------- parrilla ---------- */
+.dias{font-size:0;margin-bottom:5px}
+.dias b{display:inline-block;font-family:"Poppins",sans-serif;font-size:.86rem;font-weight:700}
+.d1{width:47%;margin-left:4.2%}.d2{width:47%;margin-left:1.8%}
+.rejilla{display:table;width:100%;border-spacing:6px 0;table-layout:fixed}
+.horas,.dia,.hueco{display:table-cell;vertical-align:top}
+.horas{width:38px}.hueco{width:14px}
+.horas span{display:block;height:var(--alto);font-size:.62rem;color:var(--tinta3);text-align:right;
+  padding-right:6px;line-height:1;transform:translateY(-4px)}
+.cab{height:30px;line-height:24px;border-bottom:2px solid var(--tinta)}
+.cab b{font-family:"Poppins",sans-serif;font-size:.76rem;font-weight:600}
+.pista{position:relative;height:calc(var(--alto) * 14);
+  background:repeating-linear-gradient(180deg,#fff 0 calc(var(--alto) - 1px),#DCDCD6 calc(var(--alto) - 1px) var(--alto))}
+.bl{position:absolute;left:0;right:0;border-radius:2px;padding:5px 8px;overflow:hidden;line-height:1.25}
+.bl b,.bl .r,.bl .k{display:block}
+.bl b{font-family:"Poppins",sans-serif;font-weight:600;font-size:.76rem}
+.bl .r{font-size:.64rem;opacity:.85}
+.bl .k{font-family:"Poppins",sans-serif;font-weight:700;font-size:.72rem;margin-top:2px}
+.trc{background:var(--oro);color:#3A2E10}
+.mini{background:var(--azul);color:#fff}
+.alq{background:var(--morado);color:#fff}
+.otro{background:var(--cesped);color:#fff}
+.libre{background:rgba(252,252,250,.5);border:1px dashed #E4E4DE}
+.leyenda{font-size:.72rem;color:var(--tinta3);margin:1.2rem 0 0}
+.leyenda i{display:inline-block;width:11px;height:11px;border-radius:2px;margin:0 5px 0 14px;vertical-align:-1px}
+.leyenda i:first-child{margin-left:0}
+
+/* ---------- mensajes ---------- */
+.tarjeta{display:flex;border:1px solid var(--linea);border-left:6px solid var(--oro);margin-bottom:12px}
+.tarjeta.fuera{border-left-color:#9B9B9C}
+.cuerpo{flex:1;padding:14px 16px;min-width:0}
+.cabt{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.cat{font-family:"Poppins",sans-serif;font-weight:700;font-size:1rem}
+.et{font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:2px 7px;border-radius:2px}
+.et.casa{background:#FBEFD6;color:#8A6516}.et.fuera{background:#F2F2EE;color:#6C6C6E}
+.datos{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px 14px;
+  border-top:1px solid var(--linea);padding-top:10px;font-size:.86rem}
+.dato span{display:block;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta3)}
+.dato b{font-family:"Poppins",sans-serif;font-weight:600}
+.dato.alta b{color:var(--oro-osc);font-size:1.05rem}
+.acc{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.previa{margin-top:10px;display:none}.previa.on{display:block}
+.previa canvas{width:190px;height:190px;border:1px solid var(--linea)}
+.vacio{color:var(--tinta3);font-size:.9rem;padding:1.5rem 0}
+
+@media print{
+  body{padding:0}
+  .barra,.pest,.leyenda a,header .sub,.aviso{display:none}
+  .panel{display:none!important}.panel.imprimir{display:block!important}
+  @page{size:A4 landscape;margin:9mm}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Programación del fin de semana</h1>
+    <p class="sub">Campo Antonio Martín y Julián Ariza</p>
+  </header>
+
+  <div class="barra">
+    <button id="ant">←</button>
+    <b id="rotulo">—</b>
+    <button id="sig">→</button>
+    <span class="sep"></span>
+    <button class="p" id="imprimir">Imprimir o guardar en PDF</button>
+  </div>
+
+  <div class="pest">
+    <button class="on" data-p="parrilla">Parrilla</button>
+    <button data-p="mensajes">Mensajes de WhatsApp</button>
+  </div>
+
+  <div id="aviso"></div>
+
+  <div class="panel on" id="p-parrilla">
+    <div id="rejilla"><p class="cargando">Cargando…</p></div>
+    <p class="leyenda">
+      <i style="background:var(--oro)"></i>TRC
+      <i style="background:var(--azul)"></i>Minifútbol
+      <i style="background:var(--morado)"></i>Alquileres
+      <i style="background:var(--cesped)"></i>Otros
+      <i style="background:rgba(252,252,250,.5);border:1px dashed #E4E4DE"></i>Libre
+      &nbsp;·&nbsp; Las horas son de ocupación del campo. En los partidos se destaca la hora de inicio.
+    </p>
+  </div>
+
+  <div class="panel" id="p-mensajes">
+    <div id="tarjetas"><p class="cargando">Cargando…</p></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURACIÓN
+   Pega aquí la misma URL /exec que usa index.html
+   ============================================================ */
+const API_URL = "";
+const CONFIG = {
+  club: "Torrelodones Rugby Club",
+  url: "campoantoniomartin.com/finde",
+  convocatoria: { "Sub 14":45, "Sub 16":60, "Sub 18":60, "Sub 17 Fem.":60,
+                  "Senior B":75, "Senior Masculino":75, "Senior Femenino":75 },
+  campos: {
+    campo: { nombre:"Campo Antonio Martín", ciudad:"Torrelodones",
+             mapa:"https://maps.app.goo.gl/1yAVSSsiVxuQuYum9" },
+    sala:  { nombre:"Sala multiusos", ciudad:"Torrelodones", mapa:"" },
+    ariza: { nombre:"Julián Ariza", ciudad:"Torrelodones", mapa:"" }
+  },
+  viaje: 40   // minutos por defecto de desplazamiento a un campo de fuera
+};
+
+const H0 = 9, H1 = 23, ALTO = 51;
+const DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?"":s).replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+const hm = m => `${Math.floor(m/60)}:${String(m%60).padStart(2,"0")}`;
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+const fecha = f => { const [a,m,d] = f.split("-").map(Number); return new Date(a,m-1,d); };
+const claveDia = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const lunesDe = d => { const x=new Date(d); x.setDate(x.getDate()-((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; };
+const suma = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const corto = d => `${d.getDate()} ${MESES[d.getMonth()].slice(0,3)}`;
+const largo = d => `${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]}`;
+
+let lunes = lunesDe(new Date());
+let datos = null;
+
+/* ---------------- datos ---------------- */
+async function cargar() {
+  $("#rejilla").innerHTML = '<p class="cargando">Cargando…</p>';
+  $("#tarjetas").innerHTML = '<p class="cargando">Cargando…</p>';
+  if (!API_URL) { datos = DEMO(); pintar(); return; }
+  try {
+    const r = await fetch(API_URL, { method:"POST", redirect:"follow",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ accion:"programacion", semana: claveDia(lunes) }) });
+    datos = await r.json();
+  } catch (e) { datos = { error:"No he podido conectar." }; }
+  pintar();
+}
+
+/* ---------------- parrilla ---------------- */
+const CLASE = ev => {
+  const e = (ev.entidad||"").toLowerCase();
+  if (!ev.oficial && !ev.club) return "alq";
+  if (e.startsWith("trc") || e.includes("torrelodones")) return "trc";
+  if (e.includes("minif")) return "mini";
+  return "otro";
+};
+
+function columna(lista, titulo) {
+  let h = `<div class="dia"><div class="cab"><b>${titulo}</b></div><div class="pista">`;
+  const ocup = lista.map(e => [e.ini, e.fin]).sort((a,b)=>a[0]-b[0]);
+  let t = H0*60;
+  const libres = [];
+  ocup.forEach(([a,b]) => { if (a>t) libres.push([t,a]); t = Math.max(t,b); });
+  if (t < H1*60) libres.push([t, H1*60]);
+  libres.forEach(([a,b]) => {
+    h += `<div class="bl libre" style="top:${(a-H0*60)*ALTO/60}px;height:${(b-a)*ALTO/60-2}px"></div>`;
+  });
+  lista.forEach(e => {
+    const alto = (e.fin-e.ini)*ALTO/60;
+    h += `<div class="bl ${CLASE(e)}" style="top:${(e.ini-H0*60)*ALTO/60}px;height:${alto-2}px">
+      <b>${esc(e.entidad)}</b>
+      <span class="r">${hm(e.ini)}–${hm(e.fin)}</span>
+      ${e.ko && alto >= 46 ? `<span class="k">Inicio ${hm(e.ko)}</span>` : ""}
+    </div>`;
+  });
+  return h + "</div></div>";
+}
+
+function pintar() {
+  const sab = suma(lunes,5), dom = suma(lunes,6);
+  $("#rotulo").textContent = `${corto(sab)} y ${corto(dom)} de ${sab.getFullYear()}`;
+  $("#sig").disabled = false;
+  $("#ant").disabled = false;
+
+  if (!datos || datos.error) {
+    $("#rejilla").innerHTML = `<p class="cargando">${esc(datos && datos.error || "Sin datos.")}</p>`;
+    return;
+  }
+  $("#aviso").innerHTML = datos.programada ? "" :
+    `<div class="aviso">Este fin de semana todavía está <b>pendiente de cerrar la programación</b>. Las horas libres no se han abierto a alquiler.</div>`;
+
+  const ev = (datos.eventos || []).filter(e => e.espacio !== "fuera");
+  const de = (f, esp) => ev.filter(e => e.fecha === f && e.espacio === esp);
+  const horas = Array.from({length:14}, (_,i) => `<span>${H0+i}:00</span>`).join("");
+
+  $("#rejilla").innerHTML = `
+    <div class="dias"><b class="d1">SÁBADO ${corto(sab).toUpperCase()}</b><b class="d2">DOMINGO ${corto(dom).toUpperCase()}</b></div>
+    <div class="rejilla">
+      <div class="horas"><div style="height:32px"></div>${horas}</div>
+      ${columna(de(claveDia(sab),"campo").concat(de(claveDia(sab),"sala")), "Antonio Martín")}
+      ${columna(de(claveDia(sab),"ariza"), "Julián Ariza")}
+      <div class="hueco"></div>
+      ${columna(de(claveDia(dom),"campo").concat(de(claveDia(dom),"sala")), "Antonio Martín")}
+      ${columna(de(claveDia(dom),"ariza"), "Julián Ariza")}
+    </div>`;
+  pintarMensajes();
+}
+
+/* ---------------- mensajes ---------------- */
+const esTRC = e => /^trc|torrelodones/i.test(e.entidad || "");
+const partidos = () => (datos.eventos || []).filter(e => e.oficial && e.ko && esTRC(e));
+
+function categoria(e) {
+  const p = String(e.entidad||"").split("·");
+  return (p[1] || p[0] || "").trim();
+}
+function sitio(e) {
+  if (e.espacio === "fuera") return { nombre: e.sede || "Campo del rival", ciudad:"", mapa:"", casa:false };
+  const c = CONFIG.campos[e.espacio] || { nombre:"Campo Antonio Martín", ciudad:"Torrelodones", mapa:"" };
+  return Object.assign({ casa:true }, c);
+}
+function horarios(e) {
+  const cat = categoria(e);
+  const cm = CONFIG.convocatoria[cat] != null ? CONFIG.convocatoria[cat] : 60;
+  const s = sitio(e);
+  return { conv: e.ko - cm, ko: e.ko, reserva: [e.ini, e.fin],
+           salida: s.casa ? null : e.ko - cm - CONFIG.viaje, sitio: s };
+}
+
+function texto(e) {
+  const h = horarios(e), s = h.sitio, d = fecha(e.fecha);
+  const L = [];
+  L.push(`*${categoria(e).toUpperCase()} · ${s.casa ? "EN CASA" : "FUERA"}*`);
+  L.push(`🏉 ${e.modalidad && e.modalidad.indexOf("–") > -1 ? e.modalidad : e.entidad}`);
+  L.push("");
+  L.push(`🗓 ${cap(largo(d))}`);
+  L.push(`🕐 *Convocatoria: ${hm(h.conv)}* · Partido: ${hm(h.ko)}`);
+  L.push(`📍 ${s.nombre}${s.ciudad ? ", " + s.ciudad : ""}`);
+  if (h.salida != null) L.push(`🚗 Salida del club: ${hm(h.salida)}`);
+  if (s.mapa) L.push(`🔗 ${s.mapa}`);
+  L.push("");
+  L.push("📋 Programación del fin de semana:");
+  L.push(CONFIG.url);
+  return L.join("\n");
+}
+
+function pintarMensajes() {
+  const lista = partidos();
+  if (!lista.length) {
+    $("#tarjetas").innerHTML = '<p class="vacio">Todavía no hay partidos del TRC programados este fin de semana.</p>';
+    return;
+  }
+  $("#tarjetas").innerHTML = lista.map((e,i) => {
+    const h = horarios(e), s = h.sitio, d = fecha(e.fecha);
+    return `<article class="tarjeta ${s.casa?"":"fuera"}">
+      <div class="cuerpo">
+        <div class="cabt">
+          <span class="cat">${esc(categoria(e))}</span>
+          <span class="et ${s.casa?"casa":"fuera"}">${s.casa?"EN CASA":"FUERA"}</span>
+        </div>
+        <div class="datos">
+          <div class="dato alta"><span>Convocatoria</span><b>${hm(h.conv)}</b></div>
+          <div class="dato"><span>Inicio</span><b>${hm(h.ko)}</b></div>
+          <div class="dato"><span>Cuándo</span><b>${cap(largo(d))}</b></div>
+          <div class="dato"><span>Dónde</span><b>${esc(s.nombre)}</b></div>
+          ${h.salida!=null?`<div class="dato"><span>Salida del club</span><b>${hm(h.salida)}</b></div>`:""}
+          ${s.casa?`<div class="dato"><span>Campo reservado</span><b>${hm(e.ini)}–${hm(e.fin)}</b></div>`:""}
+        </div>
+        <div class="acc">
+          <button class="p" data-ac="compartir" data-i="${i}">Compartir</button>
+          <button data-ac="texto" data-i="${i}">Copiar texto</button>
+          <button data-ac="imagen" data-i="${i}">Descargar imagen</button>
+          <button data-ac="ver" data-i="${i}">Ver imagen</button>
+        </div>
+        <div class="previa" id="pv-${i}"><canvas id="cv-${i}"></canvas></div>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+/* ---------------- imagen 1080×1080 ---------------- */
+function dibuja(cv, e) {
+  const S = 1080, c = cv.getContext("2d"), h = horarios(e), s = h.sitio, d = fecha(e.fecha);
+  cv.width = S; cv.height = S;
+  const ORO = "#DFA83C", TINTA = "#2E2E30", GRIS = "#8E8E88";
+  const acento = s.casa ? ORO : GRIS;
+  c.fillStyle = "#fff"; c.fillRect(0,0,S,S);
+  c.fillStyle = TINTA; c.fillRect(0,0,S,196);
+  c.fillStyle = acento; c.fillRect(0,196,S,14);
+  c.fillStyle = acento; c.font = "700 34px Poppins, Arial";
+  c.fillText(s.casa ? "EN CASA" : "FUERA", 64, 84);
+  c.fillStyle = "#fff"; c.font = "700 68px Poppins, Arial";
+  c.fillText(categoria(e).toUpperCase(), 64, 158);
+
+  let y = 300;
+  c.fillStyle = TINTA; c.font = "600 46px Poppins, Arial";
+  y = envuelve(c, e.entidad, 64, y, S-128, 56) + 60;
+  c.strokeStyle = "#E6E6E1"; c.lineWidth = 2;
+  c.beginPath(); c.moveTo(64,y); c.lineTo(S-64,y); c.stroke(); y += 70;
+
+  const fila = (et, v, alta) => {
+    c.fillStyle = "#9B9B9C"; c.font = "500 24px Roboto, Arial";
+    c.fillText(et.toUpperCase(), 64, y);
+    c.fillStyle = alta ? "#B8862A" : TINTA;
+    c.font = `${alta ? "700 54px" : "600 42px"} Poppins, Arial`;
+    c.fillText(v, 64, y + (alta ? 60 : 52));
+    y += alta ? 118 : 100;
+  };
+  fila("Cuándo", cap(largo(d)));
+  fila("Convocatoria", `${hm(h.conv)}   ·   Partido ${hm(h.ko)}`, true);
+  fila("Dónde", s.nombre + (s.ciudad ? ", " + s.ciudad : ""));
+  if (h.salida != null) fila("Salida del club", hm(h.salida));
+
+  c.fillStyle = TINTA; c.fillRect(0,S-108,S,108);
+  c.fillStyle = "#fff"; c.font = "600 30px Poppins, Arial";
+  c.fillText(CONFIG.club, 64, S-62);
+  c.fillStyle = ORO; c.font = "400 26px Roboto, Arial";
+  c.fillText(CONFIG.url, 64, S-24);
+}
+function envuelve(c, t, x, y, ancho, alto) {
+  const pal = String(t).split(" "); let l = "", yy = y;
+  for (const p of pal) {
+    const prueba = l ? l+" "+p : p;
+    if (c.measureText(prueba).width > ancho && l) { c.fillText(l,x,yy); l = p; yy += alto; }
+    else l = prueba;
+  }
+  c.fillText(l,x,yy); return yy;
+}
+
+/* ---------------- interacción ---------------- */
+document.addEventListener("click", async ev => {
+  const t = ev.target.closest(".pest button");
+  if (t) {
+    document.querySelectorAll(".pest button").forEach(b => b.classList.toggle("on", b===t));
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("on"));
+    $("#p-"+t.dataset.p).classList.add("on");
+    return;
+  }
+  const b = ev.target.closest("button[data-ac]"); if (!b) return;
+  const i = +b.dataset.i, e = partidos()[i];
+  const cv = $("#cv-"+i);
+  if (!cv.dataset.listo) { await document.fonts.ready; dibuja(cv, e); cv.dataset.listo = "1"; }
+
+  if (b.dataset.ac === "ver") {
+    const caja = $("#pv-"+i); caja.classList.toggle("on");
+    b.textContent = caja.classList.contains("on") ? "Ocultar imagen" : "Ver imagen"; return;
+  }
+  if (b.dataset.ac === "texto") {
+    try { await navigator.clipboard.writeText(texto(e)); b.textContent = "Copiado"; setTimeout(()=>b.textContent="Copiar texto",1600); }
+    catch { window.prompt("Copia el texto:", texto(e)); }
+    return;
+  }
+  if (b.dataset.ac === "imagen") {
+    const a = document.createElement("a");
+    a.download = `${categoria(e).replace(/\s+/g,"-").toLowerCase()}-${e.fecha}.png`;
+    a.href = cv.toDataURL("image/png"); a.click(); return;
+  }
+  if (b.dataset.ac === "compartir") {
+    const t2 = texto(e);
+    try {
+      const blob = await new Promise(r => cv.toBlob(r,"image/png"));
+      const file = new File([blob], "partido.png", { type:"image/png" });
+      if (navigator.canShare && navigator.canShare({ files:[file] })) {
+        await navigator.share({ files:[file], text:t2 }); return;
+      }
+      await navigator.clipboard.writeText(t2).catch(()=>{});
+      const a = document.createElement("a");
+      a.download = `${categoria(e).replace(/\s+/g,"-").toLowerCase()}-${e.fecha}.png`;
+      a.href = cv.toDataURL("image/png"); a.click();
+      window.open("https://wa.me/?text="+encodeURIComponent(t2), "_blank", "noopener");
+    } catch (err) { if (err && err.name !== "AbortError") alert("No se ha podido compartir."); }
+  }
+});
+
+$("#ant").addEventListener("click", () => { lunes = suma(lunes,-7); cargar(); });
+$("#sig").addEventListener("click", () => { lunes = suma(lunes, 7); cargar(); });
+$("#imprimir").addEventListener("click", () => {
+  const activa = document.querySelector(".panel.on");
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("imprimir"));
+  activa.classList.add("imprimir");
+  window.print();
+});
+
+/* Datos de muestra mientras no se pegue la API_URL */
+function DEMO() {
+  const sab = claveDia(suma(lunes,5)), dom = claveDia(suma(lunes,6));
+  return { ok:true, programada:true, eventos:[
+    { espacio:"campo", fecha:sab, ini:750, fin:870, ko:780, entidad:"TRC · Senior B",
+      modalidad:"Guadalajara – Torrelodones-Arquitectura", oficial:true },
+    { espacio:"campo", fecha:sab, ini:930, fin:1200, entidad:"Minifútbol", modalidad:"Bloque", oficial:true },
+    { espacio:"ariza", fecha:sab, ini:930, fin:1065, ko:975, entidad:"TRC · Senior Masculino",
+      modalidad:"Torrelodones – San Isidro-Fuencarral", oficial:true },
+    { espacio:"ariza", fecha:sab, ini:1065, fin:1200, ko:1080, entidad:"TRC · Senior Femenino",
+      modalidad:"Torrelodones-Villalba – Sanse-Soto", oficial:true },
+    { espacio:"campo", fecha:dom, ini:540, fin:660, entidad:"Omid", modalidad:"Alquiler", oficial:false, club:false },
+    { espacio:"campo", fecha:dom, ini:690, fin:1005, entidad:"Minifútbol", modalidad:"Bloque", oficial:true }
+  ]};
+}
+
+cargar();
+</script>
