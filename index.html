@@ -411,7 +411,7 @@ footer a{color:var(--cesped-osc)}
 
     <div class="aviso">
       <span aria-hidden="true">◷</span>
-      <div><b>Sábados y domingos:</b> las reservas se abren <b>cada martes</b>, una vez confirmados los partidos de TRC, Minifútbol y TotalSport. Hasta entonces aparecen bloqueados.</div>
+      <div><b>Sábados y domingos:</b> solo se pueden reservar entre el <b>miércoles</b> y el <b>viernes a las 20:00</b> de esa misma semana. Antes del miércoles no está cerrada la programación de los partidos oficiales del TRC y de Minifútbol, y después del viernes ya no da tiempo a organizar la instalación. Fuera de esa ventana las franjas aparecen bloqueadas.</div>
     </div>
 
     <div class="barra-admin" id="barra-admin">
@@ -465,7 +465,8 @@ footer a{color:var(--cesped-osc)}
 
     <details open>
       <summary>¿Por qué no puedo reservar un sábado con dos semanas de antelación?</summary>
-      <div class="resp"><p>Hasta el lunes no se cierran los horarios de la competición del TRC, de Minifútbol y de TotalSport, que tienen prioridad sobre el campo. En cuanto la jornada está confirmada, cada martes se liberan todas las horas que quedan libres ese fin de semana.</p></div>
+      <div class="resp"><p>Hasta mitad de semana no se cierran los horarios de la competición del TRC y de Minifútbol, que tienen prioridad sobre el campo. En cuanto la jornada está confirmada, <b>cada miércoles</b> se liberan las horas que quedan libres ese fin de semana.</p>
+      <p>El plazo se cierra el <b>viernes a las 20:00</b>: a partir de esa hora ya no admitimos reservas para ese sábado y domingo, porque hay que organizar conserjería, vestuarios y material.</p></div>
     </details>
     <details>
       <summary>¿Cómo se paga?</summary>
@@ -718,8 +719,21 @@ function fijoDe(fecha, hora) {
   for (const [ini, fin, etiqueta, tipo] of lista) if (hora >= ini && hora < fin) return { etiqueta, tipo, ini, fin };
   return null;
 }
-// Sábado y domingo abren el martes 00:00 de esa misma semana
-const finDeSemanaAbierto = (fecha, ahora) => ahora >= sumaDias(lunesDe(fecha), 1);
+// Sábado y domingo solo se reservan entre el miércoles 00:00 y el viernes a las 20:00
+// de esa misma semana: antes no está cerrada la programación oficial y después ya no da tiempo.
+function ventanaFinde(fecha) {
+  const l = lunesDe(fecha);
+  const abre = sumaDias(l, 2);                       // miércoles 00:00
+  const cierra = sumaDias(l, 4); cierra.setHours(20, 0, 0, 0);   // viernes 20:00
+  return { abre, cierra };
+}
+function estadoFinde(fecha, ahora) {
+  const v = ventanaFinde(fecha);
+  if (ahora < v.abre) return { estado: "antes", v };
+  if (ahora > v.cierra) return { estado: "cerrado", v };
+  return { estado: "abierto", v };
+}
+const finDeSemanaAbierto = (fecha, ahora) => estadoFinde(fecha, ahora).estado === "abierto";
 
 function precio(tipo, horas, luz, vestuarios) {
   const t = PRECIOS[tipo]; if (!t) return 0;
@@ -861,8 +875,13 @@ function celda(fecha, hora, ahora) {
     return `<button class="slot ${club ? "club" : "reservado"}" data-k="${k}">${esc(r.etiqueta)}<small>${esc(r.modalidad)}</small></button>`;
   }
 
-  if (diaISO(fecha) >= 6 && !finDeSemanaAbierto(fecha, ahora))
-    return `<span class="slot bloqueado">Se abre el martes ${fmtCorto(sumaDias(lunesDe(fecha),1))}</span>`;
+  if (diaISO(fecha) >= 6) {
+    const e = estadoFinde(fecha, ahora);
+    if (e.estado === "antes")
+      return `<span class="slot bloqueado">Se abre el miércoles ${fmtCorto(e.v.abre)}</span>`;
+    if (e.estado === "cerrado")
+      return `<span class="slot bloqueado">Cerrado · el plazo acabó el viernes a las 20:00</span>`;
+  }
   if (cargando) return `<span class="slot bloqueado">…</span>`;
   return `<button class="slot libre" data-k="${k}">Libre<small>Reservar</small></button>`;
 }
