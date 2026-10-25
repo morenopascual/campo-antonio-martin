@@ -136,6 +136,19 @@ section{padding:5.5rem 0}
 .barra-admin button{margin-left:auto;background:none;border:1px solid rgba(255,255,255,.5);color:#fff;
   padding:.4rem .9rem;font-family:var(--r);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
 .barra-admin button:hover{background:#fff;color:var(--tinta)}
+.prog{display:none;border:1px solid var(--linea);border-left:4px solid var(--ambar);background:#fff;padding:1.2rem 1.4rem 1.3rem;margin-bottom:1.4rem}
+.prog.on{display:block}
+.prog-cab{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem}
+.prog-cab h3{font-family:var(--p);font-weight:600;font-size:1.05rem;letter-spacing:-.01em}
+.prog-cab .estado{margin-left:auto;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px}
+.estado.pend{background:#FBECEC;color:#8C2F2F}
+.estado.ok{background:var(--cesped-suave);color:var(--cesped-osc)}
+.prog-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 .9rem}
+.prog-form label{margin-bottom:.3rem}
+.prog-pie{display:flex;gap:.6rem;flex-wrap:wrap}
+.prog-pie .btn{padding:.8rem 1.3rem}
+.slot.oficial{background:#3A3A3C;color:#fff;border-left:3px solid var(--ambar)}
+.slot.oficial small{color:rgba(255,255,255,.75)}
 .slot.club{background:#E7E7E4;border-left:3px solid var(--tinta-2);font-family:var(--p);font-weight:500;font-size:.78rem}
 .ficha dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.2rem .8rem;font-size:.88rem}
 .ficha dt{color:var(--tinta-3);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding-top:.15rem}
@@ -418,6 +431,35 @@ footer a{color:var(--cesped-osc)}
       <b>Modo gestión</b>
       <span>Ves los datos completos y puedes dar de alta reservas sin cobro.</span>
       <button id="salir-admin">Salir</button>
+    </div>
+
+    <div class="prog" id="prog">
+      <div class="prog-cab">
+        <h3>Programación oficial <span id="prog-semana"></span></h3>
+        <span class="estado" id="prog-estado"></span>
+      </div>
+      <div class="opciones" id="prog-modo">
+        <label class="op on"><input type="radio" name="pmodo" value="partido" checked><span>Partido</span></label>
+        <label class="op"><input type="radio" name="pmodo" value="bloque"><span>Bloque de horas</span></label>
+      </div>
+      <div class="prog-form">
+        <div><label for="g-club">Club</label>
+          <select id="g-club"><option>TRC</option><option>Minifútbol</option><option>Otro</option></select></div>
+        <div><label for="g-cat">Categoría</label><input id="g-cat" maxlength="40" placeholder="Sub 16, Senior B…"></div>
+        <div><label for="g-dia">Día</label><input type="date" id="g-dia"></div>
+        <div><label for="g-espacio">Espacio</label>
+          <select id="g-espacio"><option value="campo">Campo</option><option value="sala">Sala multiusos</option></select></div>
+        <div class="solo-partido"><label for="g-ko">Inicio del partido</label><input id="g-ko" placeholder="13:00" maxlength="5"></div>
+        <div class="solo-partido"><label for="g-dur">Duración (min)</label><input id="g-dur" inputmode="numeric" value="90" maxlength="3"></div>
+        <div class="solo-partido"><label for="g-cal">Calentamiento (min)</label><input id="g-cal" inputmode="numeric" value="30" maxlength="3"></div>
+        <div class="solo-bloque" style="display:none"><label for="g-desde">Desde</label><input id="g-desde" placeholder="16:30" maxlength="5"></div>
+        <div class="solo-bloque" style="display:none"><label for="g-hasta">Hasta</label><input id="g-hasta" placeholder="22:30" maxlength="5"></div>
+      </div>
+      <p class="error" id="g-err"></p>
+      <div class="prog-pie">
+        <button class="btn" id="g-add">Añadir a la programación</button>
+        <button class="btn secundario" id="g-cerrar">Cerrar programación y abrir reservas</button>
+      </div>
     </div>
 
     <div class="espacios" id="espacios">
@@ -819,6 +861,7 @@ async function cargarSemana() {
   try {
     const r = await API.leer(claveDia(lunesActual));
     if (r.error) throw new Error(r.error);
+    programada = !!r.programada;
     if (r.fijos) FIJOS = r.fijos;
     if (r.precios) PRECIOS = r.precios;
     if (r.vestuarios) VESTUARIOS_HORA = r.vestuarios;
@@ -830,7 +873,7 @@ async function cargarSemana() {
     reservas = {};
     mostrarError("<b>No he podido cargar el calendario.</b> Comprueba tu conexión y recarga la página. Si sigue igual, escribe a hola@campoantoniomartin.com.");
   }
-  cargando = false; pintar(); pintarEstado();
+  cargando = false; pintar(); pintarEstado(); pintarProg();
 }
 
 /* ============================================================
@@ -871,11 +914,13 @@ function celda(fecha, hora, ahora) {
   const r = reservas[k];
   if (r && r.estado === "retenida") return `<span class="slot retenida">En proceso de pago<small>Vuelve en 35 min</small></span>`;
   if (r) {
-    const club = r.cobro === "manual";
-    return `<button class="slot ${club ? "club" : "reservado"}" data-k="${k}">${esc(r.etiqueta)}<small>${esc(r.modalidad)}</small></button>`;
+    const cls = r.oficial ? "oficial" : (r.cobro === "manual" ? "club" : "reservado");
+    return `<button class="slot ${cls}" data-k="${k}">${esc(r.etiqueta)}<small>${esc(r.rango || r.modalidad)}</small></button>`;
   }
 
-  if (diaISO(fecha) >= 6) {
+  if (diaISO(fecha) >= 6 && !adminPin && !programada)
+    return `<span class="slot bloqueado">Pendiente de programación oficial</span>`;
+  if (diaISO(fecha) >= 6 && !adminPin) {
     const e = estadoFinde(fecha, ahora);
     if (e.estado === "antes")
       return `<span class="slot bloqueado">Se abre el miércoles ${fmtCorto(e.v.abre)}</span>`;
@@ -1228,6 +1273,65 @@ $("#acceso-gestion").addEventListener("click", e => {
   };
   $("#entrar").addEventListener("click", entrar);
   $("#pin").addEventListener("keydown", ev => { if (ev.key === "Enter") entrar(); });
+});
+
+/* ============================================================
+   PROGRAMACIÓN OFICIAL DEL FIN DE SEMANA
+   ============================================================ */
+let programada = false;
+
+$("#prog-modo").addEventListener("click", e => {
+  const l = e.target.closest(".op"); if (!l) return;
+  document.querySelectorAll("#prog-modo .op").forEach(x => x.classList.toggle("on", x === l));
+  const partido = l.querySelector("input").value === "partido";
+  document.querySelectorAll(".solo-partido").forEach(x => x.style.display = partido ? "block" : "none");
+  document.querySelectorAll(".solo-bloque").forEach(x => x.style.display = partido ? "none" : "block");
+});
+
+function pintarProg() {
+  const caja = $("#prog");
+  caja.classList.toggle("on", !!adminPin);
+  if (!adminPin) return;
+  const sab = sumaDias(lunesActual, 5), dom = sumaDias(lunesActual, 6);
+  $("#prog-semana").textContent = `· ${fmtCorto(sab)} y ${fmtCorto(dom)}`;
+  const e = $("#prog-estado");
+  e.textContent = programada ? "Programación cerrada" : "Pendiente de programación";
+  e.className = "estado " + (programada ? "ok" : "pend");
+  $("#g-cerrar").textContent = programada ? "Reabrir la programación" : "Cerrar programación y abrir reservas";
+  const d = $("#g-dia");
+  if (d) { d.min = claveDia(lunesActual); d.max = claveDia(dom); if (!d.value) d.value = claveDia(sab); }
+}
+
+$("#g-add").addEventListener("click", async () => {
+  const v = id => ($("#"+id) ? $("#"+id).value.trim() : "");
+  const err = $("#g-err");
+  const falla = t => { err.textContent = t; err.classList.add("visible"); };
+  err.classList.remove("visible");
+  const modo = document.querySelector('#prog-modo .op.on input').value;
+  if (!v("g-cat")) return falla("Pon la categoría o el nombre del bloque.");
+  if (!v("g-dia")) return falla("Elige el día.");
+  const btn = $("#g-add"); btn.disabled = true; btn.textContent = "Guardando…";
+  let r;
+  try {
+    r = await API.enviar({ accion:"admin", que:"programar", pin:adminPin, modo,
+      club:v("g-club"), categoria:v("g-cat"), fecha:v("g-dia"), espacio:v("g-espacio"),
+      ko:v("g-ko"), duracion:v("g-dur"), calentamiento:v("g-cal"),
+      desde:v("g-desde"), hasta:v("g-hasta") });
+  } catch (e) { r = { error:"No he podido guardar. Vuelve a intentarlo." }; }
+  btn.disabled = false; btn.textContent = "Añadir a la programación";
+  if (r.error) return falla(r.error);
+  $("#g-cat").value = "";
+  await cargarSemana();
+});
+
+$("#g-cerrar").addEventListener("click", async () => {
+  const que = programada ? "abrirprog" : "cerrarprog";
+  if (!programada && !confirm("¿Cerrar la programación? A partir del miércoles se abrirán a alquiler las horas que queden libres.")) return;
+  const btn = $("#g-cerrar"); btn.disabled = true;
+  try { await API.enviar({ accion:"admin", que, pin:adminPin, semana:claveDia(lunesActual) }); }
+  catch (e) {}
+  btn.disabled = false;
+  await cargarSemana();
 });
 
 $("#salir-admin").addEventListener("click", () => {
