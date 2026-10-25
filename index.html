@@ -688,7 +688,8 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxM1mnhPAbTloJhNsGDR5Ll
 
 const HORA_INICIO = 9;
 const HORA_FIN    = 23;
-const SEMANAS_VISTA = 12;      // hay que poder ver una serie recurrente entera
+const SEMANAS_VISTA = 12;      // lo que ve el público: tres meses por delante
+const SEMANAS_GESTION = 52;    // en modo gestión, la temporada entera
 const MAX_SEMANAS = 8;         // tope de una reserva periódica hecha desde la web
 
 // Entrenamientos fijos de temporada. Solo afectan al campo, no a la sala.
@@ -885,8 +886,12 @@ function pintar() {
   const dias = Array.from({length:7}, (_,i) => sumaDias(lunesActual,i));
 
   $("#rango-semana").textContent = `${fmtCorto(dias[0])} — ${fmtCorto(dias[6])}`;
-  $("#sem-prev").disabled = lunesActual <= lunesDe(ahora);
-  $("#sem-next").disabled = lunesActual >= sumaDias(lunesDe(ahora), 7*(SEMANAS_VISTA-1));
+  // en gestión se puede retroceder cuatro semanas, para corregir lo ya pasado
+  $("#sem-prev").disabled = adminPin
+    ? lunesActual <= sumaDias(lunesDe(ahora), -7*4)
+    : lunesActual <= lunesDe(ahora);
+  const tope = adminPin ? SEMANAS_GESTION : SEMANAS_VISTA;
+  $("#sem-next").disabled = lunesActual >= sumaDias(lunesDe(ahora), 7*(tope-1));
 
   let html = `<div class="gc gh hora"></div>`;
   dias.forEach(d => {
