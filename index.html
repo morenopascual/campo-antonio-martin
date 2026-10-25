@@ -133,6 +133,7 @@ section{padding:5.5rem 0}
   padding:.8rem 1.2rem;margin-bottom:1.2rem;font-size:.88rem}
 .barra-admin.on{display:flex}
 .barra-admin b{font-family:var(--p);font-weight:600}
+.barra-admin a{color:#fff;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-left:auto;margin-right:.8rem}
 .barra-admin button{margin-left:auto;background:none;border:1px solid rgba(255,255,255,.5);color:#fff;
   padding:.4rem .9rem;font-family:var(--r);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
 .barra-admin button:hover{background:#fff;color:var(--tinta)}
@@ -430,6 +431,7 @@ footer a{color:var(--cesped-osc)}
     <div class="barra-admin" id="barra-admin">
       <b>Modo gestión</b>
       <span>Ves los datos completos y puedes dar de alta reservas sin cobro.</span>
+      <a href="programacion.html" target="_blank" rel="noopener" id="ver-prog">Programación y mensajes</a>
       <button id="salir-admin">Salir</button>
     </div>
 
@@ -447,8 +449,14 @@ footer a{color:var(--cesped-osc)}
           <select id="g-club"><option>TRC</option><option>Minifútbol</option><option>Otro</option></select></div>
         <div><label for="g-cat">Categoría</label><input id="g-cat" maxlength="40" placeholder="Sub 16, Senior B…"></div>
         <div><label for="g-dia">Día</label><input type="date" id="g-dia"></div>
-        <div><label for="g-espacio">Espacio</label>
-          <select id="g-espacio"><option value="campo">Campo</option><option value="sala">Sala multiusos</option></select></div>
+        <div><label for="g-espacio">Dónde se juega</label>
+          <select id="g-espacio">
+            <option value="campo">Campo Antonio Martín</option>
+            <option value="sala">Sala multiusos</option>
+            <option value="ariza">Julián Ariza</option>
+            <option value="fuera">Fuera de casa</option>
+          </select></div>
+        <div class="solo-fuera" style="display:none"><label for="g-sede">Campo del rival</label><input id="g-sede" maxlength="50" placeholder="Tres Olivos, Madrid"></div>
         <div class="solo-partido"><label for="g-ko">Inicio del partido</label><input id="g-ko" placeholder="13:00" maxlength="5"></div>
         <div class="solo-partido"><label for="g-dur">Duración (min)</label><input id="g-dur" inputmode="numeric" value="90" maxlength="3"></div>
         <div class="solo-partido"><label for="g-cal">Calentamiento (min)</label><input id="g-cal" inputmode="numeric" value="30" maxlength="3"></div>
@@ -1307,6 +1315,11 @@ function pintarProg() {
   if (d) { d.removeAttribute("min"); d.removeAttribute("max"); if (!d.value) d.value = claveDia(sab); }
 }
 
+$("#g-espacio").addEventListener("change", e => {
+  const fuera = e.target.value === "fuera";
+  document.querySelectorAll(".solo-fuera").forEach(x => x.style.display = fuera ? "block" : "none");
+});
+
 $("#g-add").addEventListener("click", async () => {
   const v = id => ($("#"+id) ? $("#"+id).value.trim() : "");
   const err = $("#g-err");
@@ -1321,7 +1334,7 @@ $("#g-add").addEventListener("click", async () => {
     r = await API.enviar({ accion:"admin", que:"programar", pin:adminPin, modo,
       club:v("g-club"), categoria:v("g-cat"), fecha:v("g-dia"), espacio:v("g-espacio"),
       ko:v("g-ko"), duracion:v("g-dur"), calentamiento:v("g-cal"),
-      desde:v("g-desde"), hasta:v("g-hasta") });
+      desde:v("g-desde"), hasta:v("g-hasta"), sede:v("g-sede") });
   } catch (e) { r = { error:"No he podido guardar. Vuelve a intentarlo." }; }
   btn.disabled = false; btn.textContent = "Añadir a la programación";
   if (r.error) return falla(r.error);
