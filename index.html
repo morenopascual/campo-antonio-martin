@@ -641,7 +641,7 @@ footer a{color:var(--cesped-osc)}
 
 // Pega aquí la URL /exec de la aplicación web de Apps Script.
 // Vacío = modo demostración: se puede probar todo, pero nada se guarda.
-const API_URL = "https://script.google.com/macros/s/AKfycbxM1mnhPAbTloJhNsGDR5LlNIiISF-61rJTeSkx9AeaKE8TmA5g9LKSHZs_BsviakiW/exec";
+const API_URL = "";
 
 const HORA_INICIO = 9;
 const HORA_FIN    = 23;
@@ -1235,8 +1235,9 @@ veloPer.addEventListener("click", e => { if (e.target === veloPer) cierraPer(); 
 (function(){
   const h1=$("#p-h1"), h2=$("#p-h2");
   if(!h1) return;
-  for(let x=HORA_INICIO; x<HORA_FIN; x++) h1.insertAdjacentHTML("beforeend",`<option>${x}:00</option>`);
-  for(let x=HORA_INICIO+1; x<=HORA_FIN; x++) h2.insertAdjacentHTML("beforeend",`<option>${x}:00</option>`);
+  const dosD = x => String(x).padStart(2,"0") + ":00";
+  for(let x=HORA_INICIO; x<HORA_FIN; x++) h1.insertAdjacentHTML("beforeend",`<option>${dosD(x)}</option>`);
+  for(let x=HORA_INICIO+1; x<=HORA_FIN; x++) h2.insertAdjacentHTML("beforeend",`<option>${dosD(x)}</option>`);
   h1.value="10:00"; h2.value="12:00";
 })();
 
@@ -1265,7 +1266,8 @@ $("#p-enviar").addEventListener("click", async () => {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) return falla("Necesitamos un correo válido para responderte.");
   if (!d.desde) return falla("Indica la fecha de inicio.");
   if (d.recurrente && !d.dias.length) return falla("Marca al menos un día de la semana.");
-  if (d.recurrente && d.h1 >= d.h2) return falla("La hora de fin tiene que ser posterior a la de inicio.");
+  const hNum = t => parseInt(String(t).split(":")[0], 10);
+  if (d.recurrente && hNum(d.h1) >= hNum(d.h2)) return falla("La hora de fin tiene que ser posterior a la de inicio.");
   if (!d.recurrente && !d.fechas) return falla("Escribe las fechas y horas que necesitas.");
   if (!$("#p-consiente").checked) return falla("Tienes que aceptar las condiciones generales de uso.");
 
