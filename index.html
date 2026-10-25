@@ -1304,7 +1304,7 @@ function pintarProg() {
   e.className = "estado " + (programada ? "ok" : "pend");
   $("#g-cerrar").textContent = programada ? "Reabrir la programación" : "Cerrar programación y abrir reservas";
   const d = $("#g-dia");
-  if (d) { d.min = claveDia(lunesActual); d.max = claveDia(dom); if (!d.value) d.value = claveDia(sab); }
+  if (d) { d.removeAttribute("min"); d.removeAttribute("max"); if (!d.value) d.value = claveDia(sab); }
 }
 
 $("#g-add").addEventListener("click", async () => {
@@ -1326,6 +1326,11 @@ $("#g-add").addEventListener("click", async () => {
   btn.disabled = false; btn.textContent = "Añadir a la programación";
   if (r.error) return falla(r.error);
   $("#g-cat").value = "";
+  const t = v("g-dia");                 // nos movemos a la semana del partido
+  if (/^\d{4}-\d{2}-\d{2}$/.test(t)) {
+    const [a1,m1,d1] = t.split("-").map(Number);
+    lunesActual = lunesDe(new Date(a1, m1-1, d1));
+  }
   await cargarSemana();
 });
 
