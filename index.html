@@ -149,6 +149,40 @@ section{padding:5.5rem 0}
 .check{display:flex;align-items:flex-start;gap:.6rem;margin:0 0 1.1rem;font-size:.92rem;cursor:pointer}
 .check input{width:18px;height:18px;margin:.25rem 0 0;flex:0 0 auto}
 .check a{color:var(--cesped-osc)}
+.recordatorio{background:var(--hueso);border-left:4px solid var(--ambar);padding:.9rem 1rem;margin:0 0 1.1rem;font-size:.85rem}
+.recordatorio b{display:block;font-family:var(--p);font-weight:600;font-size:.82rem;margin-bottom:.4rem}
+.recordatorio ul{margin:0 0 .5rem;padding-left:1.1rem}
+.recordatorio li{margin-bottom:.22rem;line-height:1.45}
+.recordatorio a{font-size:.78rem;color:var(--cesped-osc)}
+.periodico{background:var(--hueso);border:1px solid var(--linea);border-left:4px solid var(--cesped);
+  padding:1.6rem 1.8rem;margin-top:2.2rem;display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:center}
+.modal.ancho{width:min(560px,100%)}
+.opciones{display:flex;gap:.5rem;margin-bottom:1.1rem}
+.op{flex:1;border:1.5px solid var(--linea);border-radius:2px;padding:.65rem .5rem;text-align:center;
+  font-size:.85rem;cursor:pointer;background:#fff}
+.op.on{border-color:var(--cesped);background:var(--cesped-suave);color:var(--cesped-osc);font-weight:500}
+.op input{display:none}
+.dias-sem{display:flex;gap:.4rem;margin-bottom:1.1rem}
+.dias-sem label{flex:1;cursor:pointer}
+.dias-sem input{display:none}
+.dias-sem span{display:block;text-align:center;padding:.55rem 0;border:1.5px solid var(--linea);
+  border-radius:2px;font-family:var(--p);font-weight:600;font-size:.85rem;color:var(--tinta-3)}
+.dias-sem input:checked + span{border-color:var(--cesped);background:var(--cesped);color:#fff}
+.aviso-modal{background:#FAF1DE;border-left:4px solid var(--ambar);padding:.8rem 1rem;margin:0 0 1.1rem;font-size:.84rem;line-height:1.5}
+.aviso-modal.rojo{background:#FBECEC;border-left-color:#A33;color:#8C2F2F}
+.iban{background:var(--hueso);border:1px solid var(--linea);border-left:4px solid var(--cesped);
+  padding:1rem 1.2rem;margin:0 0 1.2rem;font-size:.92rem;line-height:1.7}
+.iban b{font-family:var(--p);font-weight:600;letter-spacing:.02em}
+.subir{border:1.5px dashed var(--linea);border-radius:3px;padding:1.2rem;text-align:center;margin-bottom:1.1rem}
+.subir input{display:none}
+.subir label{display:inline-block;font-family:var(--r);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;
+  border:1px solid var(--tinta);padding:.6rem 1.2rem;cursor:pointer;color:var(--tinta);margin:0}
+.subir label:hover{background:var(--tinta);color:#fff}
+.subir p{font-size:.76rem;color:var(--tinta-3);margin:.7rem 0 0}
+.periodico h3{font-family:var(--p);font-weight:600;font-size:1.15rem;letter-spacing:-.01em}
+.periodico p{margin:.5rem 0 0;font-size:.92rem;color:var(--tinta-2);max-width:62ch}
+.iban{font-family:var(--p);font-weight:600;letter-spacing:.02em}
+@media (max-width:760px){.periodico{grid-template-columns:1fr}}
 .resumen{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--linea);
   padding-top:.9rem;margin-bottom:1.1rem;font-family:var(--p)}
 .resumen b{font-weight:600;font-size:1.5rem;color:var(--cesped-osc);letter-spacing:-.02em}
@@ -377,7 +411,7 @@ footer a{color:var(--cesped-osc)}
 
     <div class="aviso">
       <span aria-hidden="true">◷</span>
-      <div><b>Sábados y domingos:</b> las reservas se abren <b>cada martes</b>, una vez confirmados los partidos de TRC y Minifútbol. Hasta entonces aparecen bloqueados.</div>
+      <div><b>Sábados y domingos:</b> las reservas se abren <b>cada martes</b>, una vez confirmados los partidos de TRC, Minifútbol y TotalSport. Hasta entonces aparecen bloqueados.</div>
     </div>
 
     <div class="barra-admin" id="barra-admin">
@@ -408,6 +442,14 @@ footer a{color:var(--cesped-osc)}
       <div class="grid" id="grid" role="grid" aria-label="Calendario semanal de reservas"></div>
     </div>
     <p class="nota">Los entrenamientos del TRC y de Minifútbol, y las clases de judo, kárate y aikido en la sala, están fijados de temporada y no se pueden reservar. Si necesitas una de esas franjas, escríbenos y lo miramos.</p>
+
+    <div class="periodico">
+      <div>
+        <h3>Alquiler continuado, por meses o trimestres</h3>
+        <p>Para clubes, escuelas, empresas o grupos que necesitan el campo o la sala de forma estable. No se contrata desde el calendario: rellenas la solicitud, comprobamos la disponibilidad y se abona por transferencia bancaria.</p>
+      </div>
+      <button class="btn" id="abrir-periodico">Solicitar alquiler continuado</button>
+    </div>
   </div>
 </section>
 
@@ -423,7 +465,7 @@ footer a{color:var(--cesped-osc)}
 
     <details open>
       <summary>¿Por qué no puedo reservar un sábado con dos semanas de antelación?</summary>
-      <div class="resp"><p>Hasta el lunes no se cierran los horarios de la competición del TRC y Minifútbol, que tienen prioridad sobre el campo. En cuanto la jornada está confirmada, cada martes se liberan todas las horas que quedan libres ese fin de semana.</p></div>
+      <div class="resp"><p>Hasta el lunes no se cierran los horarios de la competición del TRC, de Minifútbol y de TotalSport, que tienen prioridad sobre el campo. En cuanto la jornada está confirmada, cada martes se liberan todas las horas que quedan libres ese fin de semana.</p></div>
     </details>
     <details>
       <summary>¿Cómo se paga?</summary>
@@ -482,10 +524,104 @@ footer a{color:var(--cesped-osc)}
     <a href="legal.html#aviso">Aviso legal</a> ·
     <a href="legal.html#privacidad">Privacidad</a> ·
     <a href="legal.html#condiciones">Condiciones de reserva</a> ·
-    <a href="#reservas" id="acceso-gestion">Gestión</a> ·
-    <a href="turnos.html" rel="nofollow">Turnos</a>
+    <a href="#reservas" id="acceso-gestion">Gestión</a>
   </div>
 </footer>
+
+<div class="velo" id="velo-per" role="dialog" aria-modal="true">
+  <div class="modal ancho">
+    <div class="modal-cab">
+      <button class="cerrar" id="per-cerrar" aria-label="Cerrar">&times;</button>
+      <span class="eyebrow" id="per-paso">Paso 1 de 3 &middot; Tu solicitud</span>
+      <h3 id="per-titulo">Alquiler continuado</h3>
+    </div>
+    <div class="modal-cuerpo" id="per-cuerpo">
+      <label for="p-entidad">Club, grupo o persona que alquila</label>
+      <input id="p-entidad" maxlength="60" placeholder="Ej. Club de Fútbol Marazuela">
+      <div class="fila-doble">
+        <div><label for="p-contacto">Persona de contacto</label><input id="p-contacto" maxlength="60"></div>
+        <div><label for="p-tel">Teléfono</label><input id="p-tel" inputmode="tel" maxlength="20"></div>
+      </div>
+      <div class="fila-doble">
+        <div><label for="p-mail">Correo</label><input id="p-mail" inputmode="email" maxlength="80" placeholder="tu@correo.com"></div>
+        <div><label for="p-personas">Nº de usuarios</label><input id="p-personas" inputmode="numeric" maxlength="5" placeholder="Aprox."></div>
+      </div>
+
+      <label for="p-espacio">Qué espacio necesitas</label>
+      <select id="p-espacio">
+        <option value="longitudinal">Campo longitudinal · rugby o fútbol 11</option>
+        <option value="transversal">Campo transversal · fútbol 7 o grupos</option>
+        <option value="sala">Sala multiusos</option>
+      </select>
+
+      <div class="fila-doble">
+        <div>
+          <label for="p-duracion">Duración</label>
+          <select id="p-duracion">
+            <option value="1">1 mes</option>
+            <option value="2">2 meses</option>
+            <option value="3" selected>Un trimestre</option>
+            <option value="6">Medio año</option>
+            <option value="9">Temporada completa</option>
+          </select>
+        </div>
+        <div><label for="p-desde">Fecha de inicio</label><input type="date" id="p-desde"></div>
+      </div>
+
+      <label>Cuándo lo necesitas</label>
+      <div class="opciones" id="p-tipo">
+        <label class="op on"><input type="radio" name="ptipo" value="rec" checked><span>Todas las semanas</span></label>
+        <label class="op"><input type="radio" name="ptipo" value="suelto"><span>Días concretos</span></label>
+      </div>
+
+      <div id="p-rec">
+        <div class="dias-sem" id="p-dias">
+          <label><input type="checkbox" value="1"><span>L</span></label>
+          <label><input type="checkbox" value="2"><span>M</span></label>
+          <label><input type="checkbox" value="3"><span>X</span></label>
+          <label><input type="checkbox" value="4"><span>J</span></label>
+          <label><input type="checkbox" value="5"><span>V</span></label>
+          <label><input type="checkbox" value="6"><span>S</span></label>
+          <label><input type="checkbox" value="7"><span>D</span></label>
+        </div>
+        <div class="fila-doble">
+          <div><label for="p-h1">Desde las</label><select id="p-h1"></select></div>
+          <div><label for="p-h2">Hasta las</label><select id="p-h2"></select></div>
+        </div>
+      </div>
+
+      <div id="p-suelto" style="display:none">
+        <label for="p-fechas">Fechas y horas concretas</label>
+        <input id="p-fechas" maxlength="200" placeholder="Ej. 12 y 19 de enero, de 10:00 a 12:00">
+      </div>
+
+      <label for="p-notas">Algo más que debamos saber</label>
+      <input id="p-notas" maxlength="160" placeholder="Opcional: vestuarios, luz, material…">
+
+      <div class="recordatorio">
+        <b>Estás alquilando una instalación deportiva</b>
+        <ul>
+          <li>Deja las porterías, los postes y los banquillos en su sitio.</li>
+          <li>Calzado adecuado al césped. Prohibidos los tacos de aluminio.</li>
+          <li>Respondes de los daños que cause tu grupo.</li>
+          <li>Cada participante debe tener licencia federativa o seguro propio.</li>
+          <li>El pago es por transferencia y por adelantado. No se cobra con tarjeta.</li>
+        </ul>
+        <a href="legal.html#condiciones" target="_blank" rel="noopener">Leer todas las condiciones de uso</a>
+      </div>
+
+      <label class="check"><input type="checkbox" id="p-consiente"><span>He leído y acepto las
+        <a href="legal.html#condiciones" target="_blank" rel="noopener">condiciones generales de uso</a> y la
+        <a href="legal.html#privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
+
+      <p class="error" id="p-err"></p>
+      <button class="btn" id="p-enviar">Comprobar disponibilidad y continuar</button>
+      <p class="nota" style="margin:.9rem 0 0;text-align:center">
+        ¿Dudas? <a href="mailto:reservas@campoantoniomartin.com" style="color:var(--cesped-osc)">reservas@campoantoniomartin.com</a> · [TELÉFONO DEL CLUB]
+      </p>
+    </div>
+  </div>
+</div>
 
 <div class="velo" id="velo" role="dialog" aria-modal="true">
   <div class="modal">
@@ -505,7 +641,7 @@ footer a{color:var(--cesped-osc)}
 
 // Pega aquí la URL /exec de la aplicación web de Apps Script.
 // Vacío = modo demostración: se puede probar todo, pero nada se guarda.
-const API_URL = "https://script.google.com/macros/s/AKfycbxM1mnhPAbTloJhNsGDR5LlNIiISF-61rJTeSkx9AeaKE8TmA5g9LKSHZs_BsviakiW/exec";
+const API_URL = "";
 
 const HORA_INICIO = 9;
 const HORA_FIN    = 23;
@@ -889,15 +1025,21 @@ function abrirModal(k) {
       <div><label for="mail">Correo</label><input id="mail" inputmode="email" placeholder="tu@correo.com" maxlength="80"></div>
     </div>
 
-    ${finde ? "" : `
-    <label class="check"><input type="checkbox" id="repetir"><span>Repetir cada semana, mismo día y hora</span></label>
-    <div id="repetir-caja" style="display:none">
-      <label for="hasta">Repetir hasta</label>
-      <input type="date" id="hasta" min="${isoDe(sumaDias(d,7))}" max="${isoDe(sumaDias(d,7*(MAX_SEMANAS-1)))}" value="${isoDe(sumaDias(d,7))}">
-    </div>`}
+    <div class="recordatorio">
+      <b>Estás alquilando una instalación deportiva</b>
+      <ul>
+        <li>Deja las porterías, los postes y los banquillos en su sitio.</li>
+        <li>Calzado adecuado al césped artificial. Prohibidos los tacos de aluminio.</li>
+        <li>Cuida la instalación: respondes de los daños que cause tu grupo.</li>
+        <li>Cada participante debe tener licencia federativa o seguro propio de accidentes.</li>
+        <li>El horario reservado incluye la entrada y el desalojo del campo.</li>
+        <li>Anulación hasta 48 h antes, con 1 € de gastos de gestión.</li>
+      </ul>
+      <a href="legal.html#condiciones" target="_blank" rel="noopener">Leer todas las condiciones de uso</a>
+    </div>
 
     <label class="check"><input type="checkbox" id="consiente"><span>He leído y acepto las
-      <a href="legal.html#condiciones" target="_blank" rel="noopener">condiciones de reserva</a> y la
+      <a href="legal.html#condiciones" target="_blank" rel="noopener">condiciones generales de uso</a> y la
       <a href="legal.html#privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
 
     <div class="resumen"><span id="detalle-precio">Total</span><b id="precio">—</b></div>
@@ -910,13 +1052,12 @@ function abrirModal(k) {
     const p = datosForm();
     const unidad = precio(p.tipo, p.horas, p.luz, p.vestuarios);
     const n = sesiones(d);
-    if ($("#repetir-caja")) $("#repetir-caja").style.display = ($("#repetir") && $("#repetir").checked) ? "block" : "none";
     $("#precio").textContent = euros(unidad * n);
     $("#detalle-precio").textContent = n > 1
       ? `${n} sesiones × ${euros(unidad)}`
       : (p.horas > 1 ? `Total · ${p.horas} horas` : "Total · 1 hora");
   };
-  ["tipo","horas","luz","vest","repetir","hasta"].forEach(id => {
+  ["tipo","horas","luz","vest"].forEach(id => {
     const el = $("#"+id); if (el) el.addEventListener("change", recalcular);
   });
   recalcular();
@@ -942,8 +1083,7 @@ async function confirmar() {
   if (!$("#consiente").checked) { fallo("Tienes que aceptar las condiciones de reserva y la política de privacidad."); return; }
 
   const btn = $("#confirmar"); btn.disabled = true; btn.textContent = "Abriendo el pago…";
-  const repetir = ($("#repetir") && $("#repetir").checked && $("#hasta") && $("#hasta").value) ? $("#hasta").value : "";
-  const carga = Object.assign({ accion:"reservar", id:slotActivo, entidad, contacto, telefono, email, consiente:true, repetir }, p);
+  const carga = Object.assign({ accion:"reservar", id:slotActivo, entidad, contacto, telefono, email, consiente:true, repetir:"" }, p);
   let r;
   try { r = await API.enviar(carga); }
   catch (e) { r = { error:"No he podido contactar con el servidor. Vuelve a intentarlo en un minuto." }; }
@@ -1076,6 +1216,140 @@ $("#salir-admin").addEventListener("click", () => {
   $("#barra-admin").classList.remove("on");
   cargarSemana();
 });
+
+/* ============================================================
+   ALQUILER CONTINUADO
+   Tres pasos: solicitud y comprobación · transferencia · justificante.
+   No entra en el calendario: lo carga el club tras validar el pago.
+   ============================================================ */
+const IBAN = "ES98 0081 2342 8100 0123 1330";
+const veloPer = $("#velo-per");
+const cierraPer = () => veloPer.classList.remove("abierto");
+let solicitud = null;
+
+$("#abrir-periodico").addEventListener("click", () => veloPer.classList.add("abierto"));
+$("#per-cerrar").addEventListener("click", cierraPer);
+veloPer.addEventListener("click", e => { if (e.target === veloPer) cierraPer(); });
+
+// horas de los desplegables
+(function(){
+  const h1=$("#p-h1"), h2=$("#p-h2");
+  if(!h1) return;
+  for(let x=HORA_INICIO; x<HORA_FIN; x++) h1.insertAdjacentHTML("beforeend",`<option>${x}:00</option>`);
+  for(let x=HORA_INICIO+1; x<=HORA_FIN; x++) h2.insertAdjacentHTML("beforeend",`<option>${x}:00</option>`);
+  h1.value="10:00"; h2.value="12:00";
+})();
+
+// alternar entre recurrente y días sueltos
+$("#p-tipo").addEventListener("click", e => {
+  const l=e.target.closest(".op"); if(!l) return;
+  document.querySelectorAll("#p-tipo .op").forEach(x=>x.classList.toggle("on", x===l));
+  const rec = l.querySelector("input").value==="rec";
+  $("#p-rec").style.display = rec ? "block" : "none";
+  $("#p-suelto").style.display = rec ? "none" : "block";
+});
+
+function datosSolicitud(){
+  const v = id => ($("#"+id) ? $("#"+id).value.trim() : "");
+  const rec = document.querySelector('#p-tipo .op.on input').value === "rec";
+  const dias = [...document.querySelectorAll("#p-dias input:checked")].map(x=>+x.value);
+  return { entidad:v("p-entidad"), contacto:v("p-contacto"), telefono:v("p-tel"), email:v("p-mail"),
+           personas:v("p-personas"), espacio:v("p-espacio"), meses:+v("p-duracion"), desde:v("p-desde"),
+           recurrente:rec, dias, h1:v("p-h1"), h2:v("p-h2"), fechas:v("p-fechas"), notas:v("p-notas") };
+}
+
+$("#p-enviar").addEventListener("click", async () => {
+  const d = datosSolicitud(), err = $("#p-err");
+  const falla = t => { err.textContent=t; err.classList.add("visible"); };
+  if (!d.entidad || !d.contacto || !d.telefono) return falla("Completa el club o grupo, el contacto y el teléfono.");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) return falla("Necesitamos un correo válido para responderte.");
+  if (!d.desde) return falla("Indica la fecha de inicio.");
+  if (d.recurrente && !d.dias.length) return falla("Marca al menos un día de la semana.");
+  if (d.recurrente && d.h1 >= d.h2) return falla("La hora de fin tiene que ser posterior a la de inicio.");
+  if (!d.recurrente && !d.fechas) return falla("Escribe las fechas y horas que necesitas.");
+  if (!$("#p-consiente").checked) return falla("Tienes que aceptar las condiciones generales de uso.");
+
+  const btn=$("#p-enviar"); btn.disabled=true; btn.textContent="Comprobando…";
+  let r;
+  try { r = await API.enviar(Object.assign({ accion:"continuado", consiente:true }, d)); }
+  catch(e){ r = { error:"No he podido enviar la solicitud. Vuelve a intentarlo en un minuto." }; }
+  if (r.error){ falla(r.error); btn.disabled=false; btn.textContent="Comprobar disponibilidad y continuar"; return; }
+
+  solicitud = Object.assign({}, d, { ref:r.ref, conflictos:r.conflictos||[], finde:r.finde });
+  pasoTransferencia();
+});
+
+function pasoTransferencia(){
+  const d = solicitud;
+  const concepto = `ALQ ${d.entidad} ${d.ref}`.slice(0,60);
+  let avisos = "";
+  if (d.conflictos && d.conflictos.length)
+    avisos += `<div class="aviso-modal rojo"><b>Hay franjas ya ocupadas</b><br>
+      ${esc(d.conflictos.slice(0,6).join(" · "))}${d.conflictos.length>6?` y ${d.conflictos.length-6} más`:""}.
+      Te propondremos una alternativa antes de cerrar el acuerdo.</div>`;
+  if (d.finde)
+    avisos += `<div class="aviso-modal">Las franjas de <b>sábado y domingo</b> quedan sujetas a la disponibilidad
+      que deje el calendario oficial de competición del Torrelodones Rugby Club y de Minifútbol, que se cierra cada martes.</div>`;
+
+  $("#per-paso").textContent = "Paso 2 de 3 · Transferencia";
+  $("#per-titulo").textContent = "Solicitud registrada";
+  $("#per-cuerpo").innerHTML = `
+    <p>Hemos recibido tu solicitud con la referencia <b>${esc(d.ref)}</b> y te hemos enviado una copia por correo.</p>
+    ${avisos}
+    <p>Para reservar las franjas, haz la transferencia y sube el justificante aquí mismo:</p>
+    <div class="iban">
+      <b>C.D.E. Torrelodones Rugby</b><br>
+      IBAN <b>${IBAN}</b><br>
+      Concepto: <b>${esc(concepto)}</b>
+    </div>
+    <div class="subir">
+      <input type="file" id="p-file" accept="application/pdf,image/jpeg,image/png">
+      <label for="p-file">Elegir justificante</label>
+      <p id="p-file-nombre">PDF o imagen, hasta 5 MB</p>
+    </div>
+    <p class="error" id="p-err2"></p>
+    <button class="btn" id="p-subir" disabled>Enviar justificante</button>
+    <button class="btn secundario" id="p-luego" style="margin-top:.5rem">Lo envío más tarde</button>
+    <p class="nota" style="margin:.9rem 0 0;text-align:center">
+      También puedes mandarlo a <a href="mailto:reservas@campoantoniomartin.com" style="color:var(--cesped-osc)">reservas@campoantoniomartin.com</a> indicando la referencia.
+    </p>`;
+
+  $("#p-luego").addEventListener("click", cierraPer);
+  const file=$("#p-file"), subir=$("#p-subir");
+  file.addEventListener("change", () => {
+    const f=file.files[0]; if(!f) return;
+    if (f.size > 5*1024*1024){ $("#p-file-nombre").textContent="El archivo pasa de 5 MB"; subir.disabled=true; return; }
+    $("#p-file-nombre").textContent = f.name;
+    subir.disabled = false;
+  });
+
+  subir.addEventListener("click", async () => {
+    const f=file.files[0]; if(!f) return;
+    subir.disabled=true; subir.textContent="Enviando…";
+    try{
+      const b64 = await new Promise((ok,ko)=>{ const fr=new FileReader();
+        fr.onload=()=>ok(String(fr.result).split(",")[1]); fr.onerror=ko; fr.readAsDataURL(f); });
+      const r = await API.enviar({ accion:"justificante", ref:d.ref, nombre:f.name, tipo:f.type, datos:b64 });
+      if (r.error) throw new Error(r.error);
+      pasoFinal();
+    }catch(e){
+      const e2=$("#p-err2"); e2.textContent = e.message || "No he podido subir el justificante.";
+      e2.classList.add("visible"); subir.disabled=false; subir.textContent="Enviar justificante";
+    }
+  });
+}
+
+function pasoFinal(){
+  $("#per-paso").textContent = "Paso 3 de 3 · Pendiente de validación";
+  $("#per-titulo").textContent = "Justificante recibido";
+  $("#per-cuerpo").innerHTML = `
+    <p><b>Tu alquiler quedará validado en cuanto comprobemos la transferencia.</b></p>
+    <p>Lo revisamos y te confirmamos por correo las franjas asignadas. Hasta ese momento el campo no figura reservado a tu nombre.</p>
+    <div class="ficha"><b>${esc(solicitud.entidad)}</b><br>Referencia ${esc(solicitud.ref)}</div>
+    <p class="nota" style="margin-top:0">Cualquier duda, en <a href="mailto:reservas@campoantoniomartin.com" style="color:var(--cesped-osc)">reservas@campoantoniomartin.com</a> o en el [TELÉFONO DEL CLUB].</p>
+    <button class="btn secundario" id="p-fin">Cerrar</button>`;
+  $("#p-fin").addEventListener("click", cierraPer);
+}
 
 /* Vuelta desde la pasarela de pago */
 (async function vueltaDelPago() {
