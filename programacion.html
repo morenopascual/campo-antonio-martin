@@ -37,7 +37,8 @@ button.p:hover{background:var(--cesped-osc)}
 .pest button.on{color:var(--tinta);border-bottom-color:var(--oro);font-weight:500}
 .panel{display:none}.panel.on{display:block}
 .aviso{background:#FBECEC;border-left:4px solid var(--rojo);color:#8C2F2F;padding:.85rem 1.1rem;
-  font-size:.86rem;margin-bottom:1.4rem}
+  font-size:.86rem;margin-bottom:1.4rem;line-height:1.55}
+.aviso code{background:rgba(0,0,0,.06);padding:.05rem .3rem;font-size:.92em}
 .cargando{color:var(--tinta3);font-size:.9rem;padding:2rem 0}
 
 /* ---------- parrilla ---------- */
@@ -75,6 +76,8 @@ button.p:hover{background:var(--cesped-osc)}
 .cat{font-family:"Poppins",sans-serif;font-weight:700;font-size:1rem}
 .et{font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:2px 7px;border-radius:2px}
 .et.casa{background:#FBEFD6;color:#8A6516}.et.fuera{background:#F2F2EE;color:#6C6C6E}
+.vs{font-family:"Poppins",sans-serif;font-weight:500;font-size:.95rem;margin-bottom:10px}
+.dato em{display:block;font-style:normal;font-size:.68rem;color:var(--tinta3)}
 .datos{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px 14px;
   border-top:1px solid var(--linea);padding-top:10px;font-size:.86rem}
 .dato span{display:block;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta3)}
@@ -86,10 +89,26 @@ button.p:hover{background:var(--cesped-osc)}
 .vacio{color:var(--tinta3);font-size:.9rem;padding:1.5rem 0}
 
 @media print{
-  body{padding:0}
-  .barra,.pest,.leyenda a,header .sub,.aviso{display:none}
+  :root{--alto:40px}
+  body{padding:0;font-size:13px}
+  .wrap{width:100%}
+  .barra,.pest,.aviso{display:none}
   .panel{display:none!important}.panel.imprimir{display:block!important}
-  @page{size:A4 landscape;margin:9mm}
+  h1{font-size:1.15rem}
+  header{padding:0 0 2px}
+  header .sub{font-size:.7rem}
+  .dias b{font-size:.72rem}
+  .cab{height:22px;line-height:18px}
+  .cab b{font-size:.66rem}
+  .horas span{font-size:.55rem}
+  .bl{padding:3px 6px}
+  .bl b{font-size:.66rem}
+  .bl .r{font-size:.56rem}
+  .bl .k{font-size:.62rem}
+  .leyenda{font-size:.6rem;margin-top:.5rem}
+  .tarjeta{break-inside:avoid}
+  .acc,.previa{display:none}
+  @page{size:A4 landscape;margin:8mm}
 }
 </style>
 
@@ -136,7 +155,7 @@ button.p:hover{background:var(--cesped-osc)}
    CONFIGURACIÓN
    Pega aquí la misma URL /exec que usa index.html
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbxM1mnhPAbTloJhNsGDR5LlNIiISF-61rJTeSkx9AeaKE8TmA5g9LKSHZs_BsviakiW/exec";
+const API_URL = "";
 const CONFIG = {
   club: "Torrelodones Rugby Club",
   url: "campoantoniomartin.com/finde",
@@ -158,6 +177,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s==null?"":s).replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
 const hm = m => `${Math.floor(m/60)}:${String(m%60).padStart(2,"0")}`;
 const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+const minutosDe = t => { const m=/^(\d{1,2}):(\d{2})$/.exec(String(t||"").trim()); return m ? (+m[1])*60+(+m[2]) : null; };
 const fecha = f => { const [a,m,d] = f.split("-").map(Number); return new Date(a,m-1,d); };
 const claveDia = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 const lunesDe = d => { const x=new Date(d); x.setDate(x.getDate()-((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; };
@@ -172,7 +192,7 @@ let datos = null;
 async function cargar() {
   $("#rejilla").innerHTML = '<p class="cargando">Cargando…</p>';
   $("#tarjetas").innerHTML = '<p class="cargando">Cargando…</p>';
-  if (!API_URL) { datos = DEMO(); pintar(); return; }
+  if (!API_URL) { datos = DEMO(); pintar(); return; }   // sin conectar: ver el aviso de pintar()
   try {
     const r = await fetch(API_URL, { method:"POST", redirect:"follow",
       headers:{ "Content-Type":"text/plain;charset=utf-8" },
@@ -205,6 +225,7 @@ function columna(lista, titulo) {
     const alto = (e.fin-e.ini)*ALTO/60;
     h += `<div class="bl ${CLASE(e)}" style="top:${(e.ini-H0*60)*ALTO/60}px;height:${alto-2}px">
       <b>${esc(e.entidad)}</b>
+      ${e.rival && alto >= 58 ? `<span class="r">${esc(e.rival)}</span>` : ""}
       <span class="r">${hm(e.ini)}–${hm(e.fin)}</span>
       ${e.ko && alto >= 46 ? `<span class="k">Inicio ${hm(e.ko)}</span>` : ""}
     </div>`;
@@ -222,8 +243,13 @@ function pintar() {
     $("#rejilla").innerHTML = `<p class="cargando">${esc(datos && datos.error || "Sin datos.")}</p>`;
     return;
   }
-  $("#aviso").innerHTML = datos.programada ? "" :
-    `<div class="aviso">Este fin de semana todavía está <b>pendiente de cerrar la programación</b>. Las horas libres no se han abierto a alquiler.</div>`;
+  let avisos = "";
+  if (!API_URL)
+    avisos += `<div class="aviso"><b>Sin conectar.</b> Falta pegar la URL del backend en la línea
+      <code>const API_URL = ""</code> de este archivo. Lo que ves son datos de muestra, los mismos en todas las semanas.</div>`;
+  else if (!datos.programada)
+    avisos += `<div class="aviso">Este fin de semana todavía está <b>pendiente de cerrar la programación</b>. Las horas libres no se han abierto a alquiler.</div>`;
+  $("#aviso").innerHTML = avisos;
 
   const ev = (datos.eventos || []).filter(e => e.espacio !== "fuera");
   const de = (f, esp) => ev.filter(e => e.fecha === f && e.espacio === esp);
@@ -250,6 +276,13 @@ function categoria(e) {
   const p = String(e.entidad||"").split("·");
   return (p[1] || p[0] || "").trim();
 }
+/* "Torrelodones RC – Osos del Pardo", con el local delante. */
+function enfrentamiento(e) {
+  const nos = "Torrelodones";
+  if (!e.rival) return e.entidad;
+  return e.espacio === "fuera" ? `${e.rival} – ${nos}` : `${nos} – ${e.rival}`;
+}
+
 function sitio(e) {
   if (e.espacio === "fuera") return { nombre: e.sede || "Campo del rival", ciudad:"", mapa:"", casa:false };
   const c = CONFIG.campos[e.espacio] || { nombre:"Campo Antonio Martín", ciudad:"Torrelodones", mapa:"" };
@@ -259,20 +292,23 @@ function horarios(e) {
   const cat = categoria(e);
   const cm = CONFIG.convocatoria[cat] != null ? CONFIG.convocatoria[cat] : 60;
   const s = sitio(e);
-  return { conv: e.ko - cm, ko: e.ko, reserva: [e.ini, e.fin],
-           salida: s.casa ? null : e.ko - cm - CONFIG.viaje, sitio: s };
+  const bus = e.bus ? minutosDe(e.bus) : null;
+  return { conv: e.ko - cm, ko: e.ko, reserva: [e.ini, e.fin], sitio: s,
+           bus: bus, lugar: e.salida || "Campo Antonio Martín",
+           salida: s.casa ? null : (bus != null ? bus : e.ko - cm - CONFIG.viaje) };
 }
 
 function texto(e) {
   const h = horarios(e), s = h.sitio, d = fecha(e.fecha);
   const L = [];
   L.push(`*${categoria(e).toUpperCase()} · ${s.casa ? "EN CASA" : "FUERA"}*`);
-  L.push(`🏉 ${e.modalidad && e.modalidad.indexOf("–") > -1 ? e.modalidad : e.entidad}`);
+  L.push(`🏉 ${enfrentamiento(e)}`);
   L.push("");
   L.push(`🗓 ${cap(largo(d))}`);
   L.push(`🕐 *Convocatoria: ${hm(h.conv)}* · Partido: ${hm(h.ko)}`);
   L.push(`📍 ${s.nombre}${s.ciudad ? ", " + s.ciudad : ""}`);
-  if (h.salida != null) L.push(`🚗 Salida del club: ${hm(h.salida)}`);
+  if (!s.casa && h.bus != null) L.push(`🚌 Bus: ${hm(h.bus)} desde ${h.lugar}`);
+  else if (h.salida != null) L.push(`🚗 Salida: ${hm(h.salida)} desde ${h.lugar}`);
   if (s.mapa) L.push(`🔗 ${s.mapa}`);
   L.push("");
   L.push("📋 Programación del fin de semana:");
@@ -294,12 +330,13 @@ function pintarMensajes() {
           <span class="cat">${esc(categoria(e))}</span>
           <span class="et ${s.casa?"casa":"fuera"}">${s.casa?"EN CASA":"FUERA"}</span>
         </div>
+        <p class="vs">${esc(enfrentamiento(e))}</p>
         <div class="datos">
           <div class="dato alta"><span>Convocatoria</span><b>${hm(h.conv)}</b></div>
           <div class="dato"><span>Inicio</span><b>${hm(h.ko)}</b></div>
           <div class="dato"><span>Cuándo</span><b>${cap(largo(d))}</b></div>
           <div class="dato"><span>Dónde</span><b>${esc(s.nombre)}</b></div>
-          ${h.salida!=null?`<div class="dato"><span>Salida del club</span><b>${hm(h.salida)}</b></div>`:""}
+          ${h.salida!=null?`<div class="dato"><span>${h.bus!=null?"Bus":"Salida"}</span><b>${hm(h.salida)}</b><em>${esc(h.lugar)}</em></div>`:""}
           ${s.casa?`<div class="dato"><span>Campo reservado</span><b>${hm(e.ini)}–${hm(e.fin)}</b></div>`:""}
         </div>
         <div class="acc">
@@ -330,7 +367,7 @@ function dibuja(cv, e) {
 
   let y = 300;
   c.fillStyle = TINTA; c.font = "600 46px Poppins, Arial";
-  y = envuelve(c, e.entidad, 64, y, S-128, 56) + 60;
+  y = envuelve(c, enfrentamiento(e), 64, y, S-128, 56) + 60;
   c.strokeStyle = "#E6E6E1"; c.lineWidth = 2;
   c.beginPath(); c.moveTo(64,y); c.lineTo(S-64,y); c.stroke(); y += 70;
 
@@ -345,7 +382,7 @@ function dibuja(cv, e) {
   fila("Cuándo", cap(largo(d)));
   fila("Convocatoria", `${hm(h.conv)}   ·   Partido ${hm(h.ko)}`, true);
   fila("Dónde", s.nombre + (s.ciudad ? ", " + s.ciudad : ""));
-  if (h.salida != null) fila("Salida del club", hm(h.salida));
+  if (h.salida != null) fila(h.bus != null ? "Bus" : "Salida", hm(h.salida) + " · " + h.lugar);
 
   c.fillStyle = TINTA; c.fillRect(0,S-108,S,108);
   c.fillStyle = "#fff"; c.font = "600 30px Poppins, Arial";
@@ -419,6 +456,8 @@ $("#imprimir").addEventListener("click", () => {
 
 /* Datos de muestra mientras no se pegue la API_URL */
 function DEMO() {
+  if (claveDia(lunes) !== claveDia(lunesDe(new Date())))
+    return { ok:true, programada:false, eventos:[] };   // otras semanas, vacías
   const sab = claveDia(suma(lunes,5)), dom = claveDia(suma(lunes,6));
   return { ok:true, programada:true, eventos:[
     { espacio:"campo", fecha:sab, ini:750, fin:870, ko:780, entidad:"TRC · Senior B",
