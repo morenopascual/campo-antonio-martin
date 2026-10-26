@@ -146,6 +146,8 @@ section{padding:5.5rem 0}
 .estado.ok{background:var(--cesped-suave);color:var(--cesped-osc)}
 .prog-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 .9rem}
 .prog-form label{margin-bottom:.3rem}
+.prog-form .opc{font-size:.62rem;color:var(--tinta-3);letter-spacing:0;text-transform:none}
+.error.ok{color:var(--cesped-osc)}
 .prog-pie{display:flex;gap:.6rem;flex-wrap:wrap}
 .prog-pie .btn{padding:.8rem 1.3rem}
 .slot.oficial{background:#3A3A3C;color:#fff;border-left:3px solid var(--ambar)}
@@ -448,6 +450,7 @@ footer a{color:var(--cesped-osc)}
         <div><label for="g-club">Club</label>
           <select id="g-club"><option>TRC</option><option>Minifútbol</option><option>Otro</option></select></div>
         <div><label for="g-cat">Categoría</label><input id="g-cat" maxlength="40" placeholder="Sub 16, Senior B…"></div>
+        <div class="solo-partido"><label for="g-rival">Rival</label><input id="g-rival" maxlength="60" placeholder="Osos del Pardo"></div>
         <div><label for="g-dia">Día</label><input type="date" id="g-dia"></div>
         <div><label for="g-espacio">Dónde se juega</label>
           <select id="g-espacio">
@@ -457,6 +460,8 @@ footer a{color:var(--cesped-osc)}
             <option value="fuera">Fuera de casa</option>
           </select></div>
         <div class="solo-fuera" style="display:none"><label for="g-sede">Campo del rival</label><input id="g-sede" maxlength="50" placeholder="Tres Olivos, Madrid"></div>
+        <div class="solo-fuera" style="display:none"><label for="g-bus">Hora del bus <span class="opc">opcional</span></label><input id="g-bus" maxlength="5" placeholder="12:45"></div>
+        <div class="solo-fuera" style="display:none"><label for="g-salida">Lugar de salida</label><input id="g-salida" maxlength="50" value="Campo Antonio Martín"></div>
         <div class="solo-partido"><label for="g-ko">Inicio del partido</label><input id="g-ko" placeholder="13:00" maxlength="5"></div>
         <div class="solo-partido"><label for="g-dur">Duración (min)</label><input id="g-dur" inputmode="numeric" value="90" maxlength="3"></div>
         <div class="solo-partido"><label for="g-cal">Calentamiento (min)</label><input id="g-cal" inputmode="numeric" value="30" maxlength="3"></div>
@@ -1334,11 +1339,13 @@ $("#g-add").addEventListener("click", async () => {
     r = await API.enviar({ accion:"admin", que:"programar", pin:adminPin, modo,
       club:v("g-club"), categoria:v("g-cat"), fecha:v("g-dia"), espacio:v("g-espacio"),
       ko:v("g-ko"), duracion:v("g-dur"), calentamiento:v("g-cal"),
-      desde:v("g-desde"), hasta:v("g-hasta"), sede:v("g-sede") });
+      desde:v("g-desde"), hasta:v("g-hasta"), sede:v("g-sede"),
+      rival:v("g-rival"), bus:v("g-bus"), salida:v("g-salida") });
   } catch (e) { r = { error:"No he podido guardar. Vuelve a intentarlo." }; }
   btn.disabled = false; btn.textContent = "Añadir a la programación";
   if (r.error) return falla(r.error);
-  $("#g-cat").value = "";
+  if (r.aviso) { $("#g-err").textContent = r.aviso; $("#g-err").classList.add("visible","ok"); }
+  $("#g-cat").value = ""; $("#g-rival").value = "";
   const t = v("g-dia");                 // nos movemos a la semana del partido
   if (/^\d{4}-\d{2}-\d{2}$/.test(t)) {
     const [a1,m1,d1] = t.split("-").map(Number);
