@@ -1,0 +1,64 @@
+<!doctype html><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Programación del campo · 7 y 8 de noviembre</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--negro:#212121;--gris:#757575;--gris2:#8a8a8a;--linea:#e2e2e2;
+  --oro:#FFD900;--oro-papel:#FFF9DB;--azul-alq:#3E5F7E;--azul-alq-sv:#DDE5EC;
+  --verde-mf:#4A7A52;--verde-mf-sv:#DFE9E0;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;color:var(--negro);font-family:"Inter",Arial,sans-serif;font-size:16px;padding:16px 0 10px}
+.wrap{width:min(1020px,96vw);margin:0 auto}
+h1{font-family:"Anton",sans-serif;text-transform:uppercase;font-size:1.7rem;line-height:1}
+.sub{font-family:"Space Mono",monospace;color:var(--gris);font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;margin:6px 0 9px;border-bottom:3px solid var(--negro);padding-bottom:8px}
+.leyenda{font-family:"Barlow Semi Condensed",sans-serif;font-size:.78rem;color:var(--gris);margin-bottom:9px}
+.leyenda i{display:inline-block;width:11px;height:11px;margin:0 5px 0 13px;vertical-align:-1px}
+.leyenda i:first-child{margin-left:0}
+.dias{font-size:0;margin-bottom:3px}
+.dias b{display:inline-block;font-family:"Barlow Semi Condensed",sans-serif;font-weight:500;
+  text-transform:uppercase;font-size:.95rem;letter-spacing:.14em;color:var(--gris)}
+.d1{width:47%;margin-left:4.2%} .d2{width:47%;margin-left:1.8%}
+.rejilla{display:table;width:100%;border-spacing:6px 0;table-layout:fixed}
+.horas,.dia,.sep{display:table-cell;vertical-align:top}
+.horas{width:36px} .sep{width:13px}
+.horas span{display:block;height:48px;font-family:"Space Mono",monospace;font-size:.56rem;
+  color:var(--gris2);text-align:right;padding-right:5px;line-height:1;transform:translateY(-4px)}
+.dia-cab{height:24px;line-height:19px;border-bottom:3px solid var(--negro)}
+.dia-cab b{font-family:"Barlow Semi Condensed",sans-serif;font-weight:600;font-size:.84rem}
+.pista{position:relative;height:672px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAwCAYAAAAsJjtLAAAAJ0lEQVR4nGP8//8/Az7AhFd2VMGoglEFowpGFQwPBSyPHz/GWx8AABduBweErrogAAAAAElFTkSuQmCC) repeat-y;background-size:100% 48px}
+.noche{position:absolute;left:0;right:0;z-index:0;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAQUlEQVR4nH3NsQ0AIAwDwSebJAX7z0PhVUKDkEAQt2fZzd07K5IGV6zCiOhWIUDLzNs2HhcvlDSswmPhhbvwQ4AJPHAflY2wBWYAAAAASUVORK5CYII=) repeat;border-top:1px dashed rgba(33,33,33,.4)}
+.bl{position:absolute;left:0;right:0;z-index:2;padding:4px 8px;overflow:hidden;line-height:1.2}
+.bl b,.bl .r,.bl .ko,.bl i{display:block}
+.bl b{font-family:"Barlow Semi Condensed",sans-serif;font-weight:700;text-transform:uppercase;
+  font-size:.86rem;letter-spacing:.03em}
+.bl .r{font-family:"Space Mono",monospace;font-size:.6rem;opacity:.75;margin-top:1px}
+.bl .ko{font-family:"Space Mono",monospace;font-weight:700;font-size:.68rem;letter-spacing:.04em;
+  margin-top:3px;padding:2px 6px;display:inline-block;background:var(--negro);color:var(--oro)}
+.bl .ko .bal{width:14px;height:10px;vertical-align:-1px;margin-right:5px;display:inline-block}
+.bl i{font-style:normal;font-family:"Barlow Semi Condensed",sans-serif;font-size:.74rem;opacity:.85;margin-top:3px}
+.trc{background:var(--oro);color:var(--negro);border-left:4px solid var(--negro)}
+.mf{background:var(--verde-mf-sv);color:#2C4A32;border-left:4px solid var(--verde-mf)}
+.alq{background:var(--azul-alq-sv);color:#2A4257;border-left:4px solid var(--azul-alq)}
+.jor{background:var(--oro-papel);color:var(--negro);border:1px solid var(--oro);border-left:4px solid var(--oro)}
+.vacio{background:rgba(255,255,255,.35);border:1px solid #f0f0f0}
+.pie{margin-top:10px;border-top:1px solid var(--linea);padding-top:8px;
+  font-family:"Barlow Semi Condensed",sans-serif;font-size:.82rem;color:var(--gris);line-height:1.45}
+.pie b{color:var(--negro);font-weight:700}
+.alerta{color:#9A3412}
+@media print{body{padding:0}}
+</style>
+<div class="wrap">
+<h1>Programación del campo</h1>
+<p class="sub">Campo Antonio Martín · 7 y 8 de noviembre de 2026 · horarios oficiales FRM</p>
+<div class="leyenda"><i style="background:var(--oro);border-left:3px solid var(--negro)"></i>TRC<i style="background:var(--verde-mf-sv);border-left:3px solid var(--verde-mf)"></i>Minifútbol<i style="background:var(--azul-alq-sv);border-left:3px solid var(--azul-alq)"></i>Alquileres<i style="background:var(--oro-papel);border:1px solid var(--oro)"></i>Jornada de escuela<i style="background:#fff;border:1px solid #e8e8e8"></i>Libre<i style="background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAQUlEQVR4nH3NsQ0AIAwDwSebJAX7z0PhVUKDkEAQt2fZzd07K5IGV6zCiOhWIUDLzNs2HhcvlDSswmPhhbvwQ4AJPHAflY2wBWYAAAAASUVORK5CYII=) repeat"></i>Con luz</div>
+<div class="dias"><b class="d1">Sábado 7 de noviembre</b><b class="d2">Domingo 8 de noviembre</b></div>
+<div class="rejilla"><div class="horas"><div style="height:27px"></div><span>9:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span><span>17:00</span><span>18:00</span><span>19:00</span><span>20:00</span><span>21:00</span><span>22:00</span></div>
+<div class="dia"><div class="dia-cab"><b>Antonio Martín</b></div><div class="pista"><div class="noche" style="top:436.0px;height:236.0px"></div><div class="bl vacio" style="top:624.0px;height:46.0px"></div><div class="bl jor" style="top:0.0px;height:238.0px"><b>Jornada Sub 12</b><span class="r">9:00–14:00</span><i>15 equipos · 2 campos de 60×40 con conos · montaje 9:00 · partidos 10:00–13:30</i></div><div class="bl trc" style="top:240.0px;height:94.0px"><b>Sub 17 Fem.</b><span class="r">14:00–16:00</span><span class="ko"><svg class="bal" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="8" rx="11" ry="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v12M7.5 8h9" stroke="currentColor" stroke-width="1.6"/></svg>KICK OFF 14:30</span><i>Cavidel El Salvador</i></div><div class="bl trc" style="top:336.0px;height:94.0px"><b>Sub 14</b><span class="r">16:00–18:00</span><span class="ko"><svg class="bal" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="8" rx="11" ry="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v12M7.5 8h9" stroke="currentColor" stroke-width="1.6"/></svg>KICK OFF 16:30</span><i>CRC Pozuelo Amarillo</i></div><div class="bl mf" style="top:432.0px;height:190.0px"><b>Minifútbol</b><span class="r">18:00–22:00</span><i>Llegada 17:30 · primer partido 18:30</i></div></div></div><div class="dia"><div class="dia-cab"><b>Julián Ariza</b></div><div class="pista"><div class="noche" style="top:436.0px;height:236.0px"></div><div class="bl vacio" style="top:0.0px;height:670.0px"></div></div></div><div class="sep"></div>
+<div class="dia"><div class="dia-cab"><b>Antonio Martín</b></div><div class="pista"><div class="noche" style="top:435.2px;height:236.8px"></div><div class="bl vacio" style="top:456.0px;height:214.0px"></div><div class="bl alq" style="top:0.0px;height:94.0px"><b>Alquiler</b><span class="r">9:00–11:00</span><i>Grupo Omid</i></div><div class="bl trc" style="top:96.0px;height:94.0px"><b>Sub 16</b><span class="r">11:00–13:00</span><span class="ko"><svg class="bal" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="8" rx="11" ry="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v12M7.5 8h9" stroke="currentColor" stroke-width="1.6"/></svg>KICK OFF 11:30</span><i>Arquitectura-Tasman</i></div><div class="bl trc" style="top:192.0px;height:94.0px"><b>Sub 18</b><span class="r">13:00–15:00</span><span class="ko"><svg class="bal" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="8" rx="11" ry="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v12M7.5 8h9" stroke="currentColor" stroke-width="1.6"/></svg>KICK OFF 13:30</span><i>CR Majadahonda</i></div><div class="bl mf" style="top:288.0px;height:166.0px"><b>Minifútbol</b><span class="r">15:00–18:30</span><i>Llegada 14:00 · primer partido 15:30</i></div></div></div><div class="dia"><div class="dia-cab"><b>Julián Ariza</b></div><div class="pista"><div class="noche" style="top:435.2px;height:236.8px"></div><div class="bl vacio" style="top:0.0px;height:670.0px"></div></div></div></div>
+<p class="pie">
+<b>Jornada Sub 12:</b> sede confirmada. 15 equipos en dos campos transversales de 60×40. Campo A de 10:00 a 14:00 y campo B de 10:00 a 13:30, con partidos cada 30 minutos. El Torrelodones juega a las 12:00 en el B y a las 13:30 en el A.<br>
+<b>Fuera:</b> Masculino 1ª en Hortaleza el domingo a las 14:00, Masculino 3ª en la Autónoma a las 12:00 y Femenino en Tres Olivos a las 10:30.<br>
+<b>Apertura:</b> sábado de 9:00 a 22:00 y domingo de 9:00 a 18:30, encadenado y sin huecos. Anochece a las 18:05.
+<span class="alerta"><b>Aviso:</b> la jornada Sub 12 termina a las 14:00 y el Sub 17 femenino empieza a calentar a esa misma hora. Hay que retirar conos y banderines de los dos campos pequeños con el calentamiento ya en marcha.</span></p>
+</div>
